@@ -12,6 +12,9 @@ const STATE = join(process.env.CLAUDE_PLUGIN_DATA ?? join(homedir(), ".claude", 
 const COMMAND = /^(pstack:)?poteto-mode$/;
 const AUTOPILOT = /autopilot/i;
 const WEEK = 7 * 24 * 60 * 60 * 1000;
+// Must match the number of SessionStart entries in hooks.json.
+const SLOTS = 6;
+const PART = 9000;
 const PLAYBOOKS = [
   "skills/poteto-mode/SKILL.md",
   "skills/poteto-mode/playbooks/autopilot-full.md",
@@ -66,19 +69,21 @@ const handlers = {
     const text = `${input.last_assistant_message ?? ""}\n${assistantSince(state.offset ?? 0)}`;
     save({ ...state, listening: false, autopilot: state.autopilot || AUTOPILOT.test(text) });
   },
+  // Claude Code files away any additionalContext over 10,000 characters, measuring each hook's output on its own,
+  // so hooks.json runs one SessionStart hook per part and each emits the part named by its argument.
   SessionStart() {
     if (!load().autopilot) return;
-    const files = PLAYBOOKS.map((file) => join(PLUGIN, file)).filter(existsSync);
-    const body = files.map((file) => `<file path="${file}">\n${readFileSync(file, "utf8")}\n</file>`).join("\n\n");
-    reply({
-      hookSpecificOutput: {
-        hookEventName: "SessionStart",
-        additionalContext:
-          "This session is running a pstack Autopilot program that the user started with /pstack:poteto-mode. " +
-          "The conversation was just compacted, so the summary above omits the playbooks. Their current text follows and governs the rest of the run.\n\n" +
-          body,
-      },
+    const parts = PLAYBOOKS.map((file) => join(PLUGIN, file)).filter(existsSync).flatMap((file) => {
+      const pieces = split(readFileSync(file, "utf8"), PART);
+      return pieces.map((piece, index) => `<file path="${file}" part="${index + 1} of ${pieces.length}">\n${piece}\n</file>`);
     });
+    const index = Number(process.argv[2] ?? 0);
+    const lead =
+      `This session is running a pstack Autopilot program that the user started with /pstack:poteto-mode. The conversation was just compacted, ` +
+      `so the summary omits the playbooks. Their current text arrives in ${parts.length} parts, one per SessionStart hook, and governs the rest of the run.`;
+    const overflow = index === SLOTS - 1 && parts.length > SLOTS ? `\n\nParts ${SLOTS + 1} to ${parts.length} did not fit. Read them from the files named above before acting.` : "";
+    if (index >= parts.length) return;
+    reply({ hookSpecificOutput: { hookEventName: "SessionStart", additionalContext: `${index === 0 ? `${lead}\n\n` : ""}${parts[index]}${overflow}` } });
   },
   PreToolUse() {
     if (!load().autopilot) return;
@@ -134,6 +139,19 @@ function shortestGap(cron) {
     last = step;
   }
   return gap ?? 8 * 24 * 60;
+}
+
+// Splits text into pieces of at most `size` characters, at line ends where it can.
+function split(text, size) {
+  const pieces = [];
+  let rest = text;
+  while (rest.length > size) {
+    const cut = rest.lastIndexOf("\n", size);
+    const at = cut > size / 2 ? cut + 1 : size;
+    pieces.push(rest.slice(0, at));
+    rest = rest.slice(at);
+  }
+  return [...pieces, rest];
 }
 
 function expand(field, low, high) {
