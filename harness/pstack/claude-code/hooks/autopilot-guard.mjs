@@ -88,13 +88,63 @@ const handlers = {
           "apply the default you would recommend, keep going, and report the call in your next reply with its options and what the operator could say to reverse it " +
           "(poteto-mode Non-negotiables; Autopilot-full step 6). Gates the operator named and the Always-pause list are raised in the reply text.",
       );
-    } else if (input.tool_name === "CronCreate") {
+    } else if (input.tool_name === "CronCreate" && input.tool_input?.recurring !== false) {
+      const cron = String(input.tool_input?.cron ?? "");
+      const gap = shortestGap(cron);
+      if (gap === undefined) return;
+      if (gap >= 60) {
+        deny(
+          `This recurring job fires every ${gap} minutes or more. The prompt cache lasts at most an hour, so each tick re-reads the whole conversation uncached, ` +
+            "and in an Autopilot run most ticks find nothing new. Wake on events instead (Autopilot-full step 6): a background Bash wait or a Monitor per agent " +
+            "that returns on its milestone, a block, its exit, or its stuck-after runtime.",
+        );
+        return;
+      }
+      const state = load();
+      const nudged = state.cronNudged ?? [];
+      if (nudged.includes(cron)) return;
+      save({ ...state, cronNudged: [...nudged, cron] });
       deny(
-        "This session runs a pstack Autopilot program, which wakes on events, never on a clock (Autopilot-full step 6). " +
-          "Arm one background waiter per started agent that returns on its milestone, a block, its exit, or its stuck-after runtime.",
+        `Before polling every ${gap} minutes, check whether a Monitor or a background Bash wait can watch the event itself, ` +
+          "so you wake when it happens instead of on a clock (Autopilot-full step 6). If the work truly needs a clock, call CronCreate again with the same cron.",
       );
     }
   },
 };
+
+// The shortest time in minutes between two fires of a 5-field cron, over the next eight days.
+function shortestGap(cron) {
+  const fields = cron.trim().split(/\s+/);
+  if (fields.length !== 5) return undefined;
+  const ranges = [[0, 59], [0, 23], [1, 31], [1, 12], [0, 7]];
+  const sets = fields.map((field, index) => expand(field, ...ranges[index]));
+  if (sets.some((set) => set === undefined)) return undefined;
+  if (sets[4].has(7)) sets[4].add(0);
+  const [minutes, hours, days, months, weekdays] = sets;
+  const anyDay = fields[2] === "*", anyWeekday = fields[4] === "*";
+  const start = new Date();
+  start.setSeconds(0, 0);
+  let last, gap;
+  for (let step = 1; step <= 8 * 24 * 60; step++) {
+    const at = new Date(start.getTime() + step * 60000);
+    const day = days.has(at.getDate()), weekday = weekdays.has(at.getDay());
+    const dayMatch = anyDay || anyWeekday ? day && weekday : day || weekday;
+    if (!minutes.has(at.getMinutes()) || !hours.has(at.getHours()) || !months.has(at.getMonth() + 1) || !dayMatch) continue;
+    if (last !== undefined) gap = Math.min(gap ?? Infinity, step - last);
+    last = step;
+  }
+  return gap ?? 8 * 24 * 60;
+}
+
+function expand(field, low, high) {
+  const set = new Set();
+  for (const part of field.split(",")) {
+    const match = part.match(/^(\*|\d+(?:-\d+)?)(?:\/(\d+))?$/);
+    if (!match) return undefined;
+    const [from, to] = match[1] === "*" ? [low, high] : match[1].split("-").map(Number).concat(match[1].includes("-") ? [] : [match[2] ? high : Number(match[1])]);
+    for (let value = from; value <= to; value += Number(match[2] ?? 1)) set.add(value);
+  }
+  return set;
+}
 
 handlers[input.hook_event_name]?.();
