@@ -20,6 +20,7 @@ Infer the need from the message and the conversation. A named situation, such as
 
 - Get set up
 - Start a task with `/poteto-mode`
+- Take an idea to shipped PRs
 - Pick a skill for a situation
 - Fix a run that went wrong
 - Make pstack my own
@@ -60,6 +61,18 @@ Whether `/poteto-mode` stays on depends on how the user starts it:
 - Cursor's docs list Custom Modes in the Agents Window and the CLI. Elsewhere, start each new task with `/poteto-mode`.
 
 Link [Cursor's skills docs](https://cursor.com/docs/skills) when this comes up. Mid-chat, "new task" makes the mode match a fresh playbook. `/poteto-mode` already uses `poteto-agent` for the subagents its playbook steps spawn. To get the same style from a subagent of your own, spawn it with `subagent_type: "poteto-agent"`.
+
+## Take an idea to shipped PRs
+
+The main flow for an idea, a new project, or a feature bigger than one PR. Each step ends on a state the next one starts from, and the user may stop after any of them.
+
+1. [`/grilling`](../grilling/SKILL.md) settles the intent by interview, a round of questions at a time, until every decision is the user's and nothing is silently assumed.
+2. A question only a run can answer, like a state model, a layout, or a timing, goes to `/poteto-mode prototype <question>` before the next step. The prototype's answer feeds back into the grilling thread.
+3. [`/to-tickets`](../to-tickets/SKILL.md) cuts the settled work into tracer-bullet tickets with "Blocked by" edges, as GitHub issues or `.scratch/<feature-slug>/issues/` files, whichever the repo's `AGENTS.md` names. Run it in the same chat as the grilling, before clearing context, so the tickets carry the decisions. Work that fits one PR skips this step and goes to `/poteto-mode` directly.
+4. `/poteto-mode autopilot-stack <the queue>` builds and verifies every ticket and hands the stack to the user to land. `full autopilot` in its place lets the run merge.
+5. [`/reflect`](../reflect/SKILL.md) after the run turns what went wrong into skill edits.
+
+A goal too foggy to grill in one chat, such as a greenfield product, goes to `/poteto-mode` with the goal, which routes it to `figure-it-out` or Orchestrate.
 
 ## Pick a skill
 
