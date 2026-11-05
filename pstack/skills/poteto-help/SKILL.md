@@ -77,6 +77,7 @@ The default answer is `/poteto-mode`, which runs most of the others when its ste
 | Know what a small diff could break outside itself | [`/blast-radius`](../blast-radius/SKILL.md) |
 | Take an idea, a foggy effort, or a ticket queue to shipped PRs, starting wherever it is | [`/shiro`](../shiro/SKILL.md) |
 | Get interviewed about a plan, a round of questions at a time, until every decision is settled | [`/grilling`](../grilling/SKILL.md) |
+| Get grilled while the glossary and hard decisions are written down as they settle | [`/grill-with-docs`](../grill-with-docs/SKILL.md) |
 | Cut settled multi-PR work into tickets with blocking edges, as a queue for Autopilot | [`/to-tickets`](../to-tickets/SKILL.md) |
 | Chart a greenfield or foggy effort as a map of decision tickets, resolved one per session | [`/wayfinder`](../wayfinder/SKILL.md) |
 | Turn a settled conversation or a cleared map into one spec | [`/to-spec`](../to-spec/SKILL.md) |

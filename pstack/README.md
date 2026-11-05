@@ -140,6 +140,7 @@ to keep [`/poteto-mode`](./skills/poteto-mode/SKILL.md) on across turns, pick it
 | [`/to-spec`](./skills/to-spec/SKILL.md) | a conversation or a cleared `/wayfinder` map has settled what to build and you want it as one spec. runs only when you type `/to-spec`. |
 | [`/domain-modeling`](./skills/domain-modeling/SKILL.md) | the words are the problem: you want fuzzy terms pinned down in `GLOSSARY.md` and hard-to-reverse decisions recorded. |
 | [`/research`](./skills/research/SKILL.md) | you want a question answered from primary sources outside the repo, by a background agent, into a cited Markdown file. |
+| [`/grill-with-docs`](./skills/grill-with-docs/SKILL.md) | you want `/grilling` with `/domain-modeling` running alongside, so terms land in the glossary and hard decisions get recorded as the interview settles them. runs only when you type `/grill-with-docs`. |
 | [`/to-tickets`](./skills/to-tickets/SKILL.md) | settled work spans several PRs and you want it cut into tracer-bullet tickets with blocking edges, as GitHub issues or `.scratch/` files that Autopilot can run. runs only when you type `/to-tickets`. |
 | [`/architect`](./skills/architect/SKILL.md) | you're about to write code that crosses a function boundary and want the caller's usage, types, and module shape settled first. |
 | [`/arena`](./skills/arena/SKILL.md) | you want N parallel attempts at the same thing, then to grab the best parts of each. |

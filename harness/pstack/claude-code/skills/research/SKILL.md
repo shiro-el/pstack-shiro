@@ -1,6 +1,6 @@
 ---
 name: research
-description: Investigate a question against high-trust primary sources and capture the findings as a Markdown file in the repo. Use when the user wants a topic researched, docs or API facts gathered, or reading legwork delegated to a background agent.
+description: Research a question outside the repo against primary sources, in a background agent, into a cited Markdown file. Use when the user says research, 조사, or 동향 파악, or wants docs, API facts, or the state of practice gathered.
 ---
 
 # Research

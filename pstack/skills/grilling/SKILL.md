@@ -1,6 +1,6 @@
 ---
 name: grilling
-description: Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.
+description: Interview the user a round of questions at a time until every decision in a plan, design, or idea is settled. Use when the user says grill me, 인터뷰, or 구체화, or wants a plan stress-tested before work starts.
 ---
 
 # Grilling
