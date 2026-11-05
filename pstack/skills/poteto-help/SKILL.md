@@ -75,6 +75,8 @@ The default answer is `/poteto-mode`, which runs most of the others when its ste
 | Catch up on what changed in this chat since their last message, in plain words and small visuals, with every item waiting on them listed and decidable from the reply alone | [`/ketchup`](../ketchup/SKILL.md) |
 | Catch up like `/ketchup`, in a short subtitled video of slides, with the waiting calls as text under it | [`/ketchup-video`](../ketchup-video/SKILL.md) |
 | Know what a small diff could break outside itself | [`/blast-radius`](../blast-radius/SKILL.md) |
+| Get interviewed about a plan, a round of questions at a time, until every decision is settled | [`/grilling`](../grilling/SKILL.md) |
+| Cut settled multi-PR work into tickets with blocking edges, as a queue for Autopilot | [`/to-tickets`](../to-tickets/SKILL.md) |
 | Settle types and module shape before code that crosses a function boundary | [`/architect`](../architect/SKILL.md) |
 | Get several attempts at one brief, merged into the best one | [`/arena`](../arena/SKILL.md) |
 | Run parallel checks over slices, or race workers, as cloud agents | [`/swarm`](../swarm/SKILL.md) |
