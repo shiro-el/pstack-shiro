@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
-# Waits for a Herdr agent to finish a turn that changed its status report.
-# `herdr agent wait` returns early while the agent waits on its own background
-# monitor, so this judges the turn by its side effects instead: the report's
-# `state:` and `head:` lines differ from the fingerprint you pass, and the agent
-# is idle, done, blocked, or gone. Polls once a minute. Never writes anything.
+# Waits for an hc agent to finish a turn that changed its status report.
+# `hc wait` returns early while the agent waits on its own background monitor,
+# so this judges the turn by its side effects instead: the report's `state:` and
+# `head:` lines differ from the fingerprint you pass, and the agent is idle,
+# done, blocked, errored, or gone. While the agent works it blocks in `hc wait`;
+# while it sits idle with an unchanged report it rechecks once a minute.
+# Never writes anything.
 #
 # Usage: wait-report.sh --fingerprint <report.md>
 #        wait-report.sh <agent> <report.md> <old fingerprint>
@@ -26,11 +28,12 @@ report=${2:?$usage}
 old=${3?$usage}
 
 while :; do
-  status=$(herdr agent get "$agent" 2>/dev/null | jq -r '.result.agent.agent_status // "gone"')
+  status=$(hc get "$agent" --json 2>/dev/null |
+    jq -r 'if .state == "finished" then "gone" else (.status.state // "working") end')
   status=${status:-gone}
   now=$(fingerprint "$report")
   case $status in
-    blocked | gone)
+    blocked | error | gone)
       echo "agent=$agent status=$status"
       echo "$now"
       exit 0
@@ -41,7 +44,10 @@ while :; do
         echo "$now"
         exit 0
       fi
+      sleep 60
+      ;;
+    *)
+      hc wait "$agent" --timeout 600 >/dev/null 2>&1 || sleep 5
       ;;
   esac
-  sleep 60
 done

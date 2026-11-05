@@ -123,6 +123,7 @@ You might be wondering whether every change needs this. No. Most changes need no
 - A small, finished change you're unsure about needs `/interrogate` alone.
 - A change that crosses function boundaries or moves ownership earns `/architect`, which brings `/arena` with it.
 - A standalone decision where independent attempts would help, like naming, formats, or an algorithm, is `/arena` directly.
+- A decision with real trade-offs where the strongest objection matters more than another attempt, like a policy, a migration strategy, or a guardrail, is `/debate`: assigned stances argue it over rounds and a judge from another family rules.
 - A coverage matrix, set of parallel checks, or race with declared arms is `/swarm`.
 - An open question you could answer by running something, like a layout, a timing, or an approach, gets a prototype, not a debate.
 - A contested design that's expensive to reverse gets `/architect`, then `/interrogate` before shipping.
