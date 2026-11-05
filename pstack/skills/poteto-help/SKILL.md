@@ -62,7 +62,9 @@ Link [Cursor's skills docs](https://cursor.com/docs/skills) when this comes up. 
 
 ## Take an idea to shipped PRs
 
-The main flow for an idea, a new project, or a feature bigger than one PR. Each step ends on a state the next one starts from, and the user may stop after any of them.
+The main flow for an idea, a new project, or a feature bigger than one PR. Pick the branch by what already exists: pstack's verification compares head against trunk and drives a running app, so it needs code to stand on. Each step ends on a state the next one starts from, and the user may stop after any of them.
+
+**In an existing codebase:**
 
 1. [`/grilling`](../grilling/SKILL.md) settles the intent by interview, a round of questions at a time, until every decision is the user's and nothing is silently assumed.
 2. A question only a run can answer, like a state model, a layout, or a timing, goes to `/poteto-mode prototype <question>` before the next step. The prototype's answer feeds back into the grilling thread.
@@ -70,7 +72,13 @@ The main flow for an idea, a new project, or a feature bigger than one PR. Each 
 4. `/poteto-mode autopilot-stack <the queue>` builds and verifies every ticket and hands the stack to the user to land. `full autopilot` in its place lets the run merge.
 5. [`/reflect`](../reflect/SKILL.md) after the run turns what went wrong into skill edits.
 
-A goal too foggy to grill in one chat, such as a greenfield product, goes to `/poteto-mode` with the goal, which routes it to `figure-it-out` or Orchestrate.
+**From scratch, or an effort too foggy to grill in one chat:**
+
+1. [`/wayfinder`](../wayfinder/SKILL.md) charts the destination and a map of decision tickets, then resolves one ticket per session (grilling with [`/domain-modeling`](../domain-modeling/SKILL.md), prototypes, [`/research`](../research/SKILL.md)) until the way is clear. It plans and builds nothing.
+2. [`/to-spec`](../to-spec/SKILL.md) collapses the map's decisions into one spec.
+3. [`/to-tickets`](../to-tickets/SKILL.md) cuts the spec into tickets. The first tickets lay the skeleton every later one builds on: the app that runs, its first test, and its verification skill.
+4. `/poteto-mode` builds the skeleton tickets one at a time with the Feature playbook, since there is no trunk behavior to compare yet. Run [`/create-verification-skill`](../create-verification-skill/SKILL.md) once the app runs. From then on, `/poteto-mode autopilot-stack <the rest of the queue>`.
+5. [`/reflect`](../reflect/SKILL.md) as above.
 
 ## Pick a skill
 
@@ -90,6 +98,10 @@ The default answer is `/poteto-mode`, which runs most of the others when its ste
 | Know what a small diff could break outside itself | [`/blast-radius`](../blast-radius/SKILL.md) |
 | Get interviewed about a plan, a round of questions at a time, until every decision is settled | [`/grilling`](../grilling/SKILL.md) |
 | Cut settled multi-PR work into tickets with blocking edges, as a queue for Autopilot | [`/to-tickets`](../to-tickets/SKILL.md) |
+| Chart a greenfield or foggy effort as a map of decision tickets, resolved one per session | [`/wayfinder`](../wayfinder/SKILL.md) |
+| Turn a settled conversation or a cleared map into one spec | [`/to-spec`](../to-spec/SKILL.md) |
+| Pin down the domain's terms in `GLOSSARY.md` and record hard-to-reverse decisions | [`/domain-modeling`](../domain-modeling/SKILL.md) |
+| Research a question against primary sources outside the repo, into a cited Markdown file | [`/research`](../research/SKILL.md) |
 | Settle types and module shape before code that crosses a function boundary | [`/architect`](../architect/SKILL.md) |
 | Get several attempts at one brief, merged into the best one | [`/arena`](../arena/SKILL.md) |
 | Run parallel checks over slices, or race workers, as cloud agents | [`/swarm`](../swarm/SKILL.md) |

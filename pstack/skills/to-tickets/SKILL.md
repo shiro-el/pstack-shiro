@@ -14,12 +14,7 @@ Break a plan, spec, or conversation into a set of **tickets**: tracer-bullet ver
 
 Work from whatever is already in the conversation context. If the user passes a reference (a spec path, an issue number or URL) as an argument, fetch it and read its full body and comments.
 
-Find the tracker: the `Issue tracker` section of the repo's `AGENTS.md` or `CLAUDE.md`, and the doc it points to. It names one of two:
-
-- **GitHub issues**, created with `gh issue create`.
-- **Local files** under `.scratch/<feature-slug>/issues/`.
-
-When the repo names neither, use local files and say so in the report.
+Find the tracker, GitHub issues or local files, per [TRACKERS.md](TRACKERS.md).
 
 ### 2. Explore the codebase (optional)
 
@@ -64,10 +59,10 @@ Iterate until the user approves the breakdown.
 
 Publish the approved tickets in dependency order (blockers first), so every blocking edge can name a ticket that already exists. The tickets are the same either way; only where they live changes:
 
-- **Local files** → one file per ticket at `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numbered from `01`. Each file's "Blocked by" lists the numbers and titles it depends on. Use the local template below: one ticket per file, never a single combined file.
-- **GitHub issues** → one `gh issue create` per ticket with the issue template below. "Blocked by" lists the blocking issues as `#N`. When the source was an existing issue, its number goes under "Parent".
+- **Local files** → the local template below, one file per ticket.
+- **GitHub issues** → one issue per ticket with the issue template below. When the source was an existing issue, make each ticket its sub-issue and put its number under "Parent".
 
-Apply the `ready-for-agent` label or `Status:` value when the repo's `AGENTS.md` defines triage labels.
+[TRACKERS.md](TRACKERS.md) has the paths, commands, blocking edges, and status values for each.
 
 Do NOT close or modify any parent issue.
 

@@ -127,7 +127,7 @@ You might be wondering whether every change needs this. No. Most changes need no
 - A coverage matrix, set of parallel checks, or race with declared arms is `/swarm`.
 - An open question you could answer by running something, like a layout, a timing, or an approach, gets a prototype, not a debate.
 - A contested design that's expensive to reverse gets `/architect`, then `/interrogate` before shipping.
-- Work that spans several PRs gets a plan, written after the design settles. When the intent itself is unsettled, `/grilling` settles it with you first, and `/to-tickets` turns the result into the queue Autopilot runs.
+- Work that spans several PRs gets a plan, written after the design settles. When the intent itself is unsettled, `/grilling` settles it with you first, and `/to-tickets` turns the result into the queue Autopilot runs. Starting from scratch, `/wayfinder` charts the decisions first and `/to-spec` collapses them, because there is no trunk yet for pstack's verification to compare against.
 
 `/poteto-mode` already applies this ladder. Boundary-crossing work triggers `/architect` on its own, so you reach for these directly mainly when you want more or less scrutiny than the default.
 

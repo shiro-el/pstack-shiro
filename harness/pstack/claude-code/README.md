@@ -135,6 +135,10 @@ to keep [`/poteto-mode`](./skills/poteto-mode/SKILL.md) on across turns, pick it
 | [`/ketchup-video`](./skills/ketchup-video/SKILL.md) | you want the `/ketchup` catch-up as a short subtitled video of slides, with the calls waiting on you as text under it. |
 | [`/blast-radius`](./skills/blast-radius/SKILL.md) | you have a small-looking change and want to know what else it could break, with the one fact it's safe because of proven by running code, not asserted. |
 | [`/grilling`](./skills/grilling/SKILL.md) | you have a plan or idea and want to be interviewed a round of questions at a time, each with a recommended answer, until every decision is settled. |
+| [`/wayfinder`](./skills/wayfinder/SKILL.md) | you're starting from scratch, or the effort is too big and foggy for one chat. charts the destination and a map of decision tickets, resolved one per session, until the way is clear. runs only when you type `/wayfinder`. |
+| [`/to-spec`](./skills/to-spec/SKILL.md) | a conversation or a cleared `/wayfinder` map has settled what to build and you want it as one spec. runs only when you type `/to-spec`. |
+| [`/domain-modeling`](./skills/domain-modeling/SKILL.md) | the words are the problem: you want fuzzy terms pinned down in `GLOSSARY.md` and hard-to-reverse decisions recorded. |
+| [`/research`](./skills/research/SKILL.md) | you want a question answered from primary sources outside the repo, by a background agent, into a cited Markdown file. |
 | [`/to-tickets`](./skills/to-tickets/SKILL.md) | settled work spans several PRs and you want it cut into tracer-bullet tickets with blocking edges, as GitHub issues or `.scratch/` files that Autopilot can run. runs only when you type `/to-tickets`. |
 | [`/architect`](./skills/architect/SKILL.md) | you're about to write code that crosses a function boundary and want the caller's usage, types, and module shape settled first. |
 | [`/arena`](./skills/arena/SKILL.md) | you want N parallel attempts at the same thing, then to grab the best parts of each. |
