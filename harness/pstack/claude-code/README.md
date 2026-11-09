@@ -142,6 +142,7 @@ to keep [`/poteto-mode`](./skills/poteto-mode/SKILL.md) on across turns, pick it
 | [`/research`](./skills/research/SKILL.md) | you want a question answered from primary sources outside the repo, by a background agent, into a cited Markdown file. |
 | [`/grill-with-docs`](./skills/grill-with-docs/SKILL.md) | you want `/grilling` with `/domain-modeling` running alongside, so terms land in the glossary and hard decisions get recorded as the interview settles them. runs only when you type `/grill-with-docs`. |
 | [`/to-tickets`](./skills/to-tickets/SKILL.md) | settled work spans several PRs and you want it cut into tracer-bullet tickets with blocking edges, as GitHub issues or `.scratch/` files that Autopilot can run. runs only when you type `/to-tickets`. |
+| [`/wizard`](./skills/wizard/SKILL.md) | a procedure has steps only a human can do, such as dashboards, credentials, CI secrets, or a one-off cutover, and you want an interactive bash script that walks through them and saves each value where it belongs. |
 | [`/architect`](./skills/architect/SKILL.md) | you're about to write code that crosses a function boundary and want the caller's usage, types, and module shape settled first. |
 | [`/arena`](./skills/arena/SKILL.md) | you want N parallel attempts at the same thing, then to grab the best parts of each. |
 | [`/swarm`](./skills/swarm/SKILL.md) | you want N parallel workers across different slices or races, then one aggregated report. |

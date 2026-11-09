@@ -79,6 +79,7 @@ The default answer is `/poteto-mode`, which runs most of the others when its ste
 | Get interviewed about a plan, a round of questions at a time, until every decision is settled | [`/grilling`](../grilling/SKILL.md) |
 | Get grilled while the glossary and hard decisions are written down as they settle | [`/grill-with-docs`](../grill-with-docs/SKILL.md) |
 | Cut settled multi-PR work into tickets with blocking edges, as a queue for Autopilot | [`/to-tickets`](../to-tickets/SKILL.md) |
+| Generate an interactive bash script that walks a human through steps only they can do, such as dashboards, credentials, or a cutover | [`/wizard`](../wizard/SKILL.md) |
 | Chart a greenfield or foggy effort as a map of decision tickets, resolved one per session | [`/wayfinder`](../wayfinder/SKILL.md) |
 | Turn a settled conversation or a cleared map into one spec | [`/to-spec`](../to-spec/SKILL.md) |
 | Pin down the domain's terms in `GLOSSARY.md` and record hard-to-reverse decisions | [`/domain-modeling`](../domain-modeling/SKILL.md) |
