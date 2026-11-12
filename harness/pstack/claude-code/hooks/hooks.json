@@ -15,17 +15,7 @@
     ],
     "PostToolUse": [
       {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\"",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
+        "matcher": "Read|Bash",
         "hooks": [
           {
             "type": "command",

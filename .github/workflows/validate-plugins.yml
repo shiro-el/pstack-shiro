@@ -32,4 +32,4 @@ jobs:
         run: node scripts/generate-pstack-harness-trees.mjs --check
 
       - name: Test pstack skill scripts
-        run: node --disable-warning=ExperimentalWarning --test pstack/skills/*/scripts/test/*.test.ts
+        run: node --disable-warning=ExperimentalWarning --test pstack/skills/*/scripts/test/*.test.ts scripts/test/*.test.ts

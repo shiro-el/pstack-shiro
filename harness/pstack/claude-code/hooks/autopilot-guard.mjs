@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 // Claude Code hooks that hold an Autopilot run to its playbooks across compaction.
-// A session enters Autopilot only when the user invokes /pstack:poteto-mode and "autopilot" appears in that prompt,
-// in the agent's reply to it, or in a tool call during that reply. The state lives outside the conversation.
+// A session enters Autopilot only when the user has invoked /pstack:poteto-mode in it and the agent then reads an
+// Autopilot playbook. A word in a prompt, reply, or todo is not the signal: Idea to PRs names Autopilot as a later stage
+// while it is still grilling the operator, and its Autopilot stage starts turns after the invocation. The state lives
+// outside the conversation.
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
@@ -10,7 +12,8 @@ import { fileURLToPath } from "node:url";
 const PLUGIN = process.env.CLAUDE_PLUGIN_ROOT ?? join(dirname(fileURLToPath(import.meta.url)), "..");
 const STATE = join(process.env.CLAUDE_PLUGIN_DATA ?? join(homedir(), ".claude", "state", "pstack"), "autopilot");
 const COMMAND = /^(pstack:)?poteto-mode$/;
-const AUTOPILOT = /autopilot/i;
+const AUTOPILOT_PLAYBOOK = /playbooks\/autopilot-(full|stack)\.md/;
+const READERS = new Set(["Read", "Bash"]);
 const WEEK = 7 * 24 * 60 * 60 * 1000;
 // Must match the number of SessionStart entries in hooks.json.
 const SLOTS = 6;
@@ -33,19 +36,6 @@ const save = (state) => {
   }
   writeFileSync(path, JSON.stringify(state));
 };
-const transcriptSize = () => (input.transcript_path && existsSync(input.transcript_path) ? statSync(input.transcript_path).size : 0);
-// last_assistant_message holds only the turn's final text, so the turn's earlier assistant entries are read here.
-const assistantSince = (offset) => {
-  if (!input.transcript_path || !existsSync(input.transcript_path)) return "";
-  return readFileSync(input.transcript_path).subarray(offset).toString("utf8").split("\n").flatMap((line) => {
-    try {
-      const entry = JSON.parse(line);
-      return entry.type === "assistant" ? [JSON.stringify(entry.message?.content ?? "")] : [];
-    } catch {
-      return [];
-    }
-  }).join("\n");
-};
 const reply = (output) => process.stdout.write(JSON.stringify(output));
 const deny = (reason) =>
   reply({ hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "deny", permissionDecisionReason: reason } });
@@ -53,21 +43,12 @@ const deny = (reason) =>
 const handlers = {
   UserPromptExpansion() {
     if (!COMMAND.test(String(input.command_name ?? ""))) return;
-    const text = `${input.command_args ?? ""} ${input.prompt ?? ""}`;
-    const state = load();
-    save({ ...state, listening: true, offset: transcriptSize(), autopilot: state.autopilot || AUTOPILOT.test(text) });
+    save({ ...load(), poteto: true });
   },
   PostToolUse() {
     const state = load();
-    if (state.listening && !state.autopilot && AUTOPILOT.test(JSON.stringify(input.tool_input ?? {}))) {
-      save({ ...state, autopilot: true });
-    }
-  },
-  Stop() {
-    const state = load();
-    if (!state.listening) return;
-    const text = `${input.last_assistant_message ?? ""}\n${assistantSince(state.offset ?? 0)}`;
-    save({ ...state, listening: false, autopilot: state.autopilot || AUTOPILOT.test(text) });
+    if (!state.poteto || state.autopilot || !READERS.has(input.tool_name)) return;
+    if (AUTOPILOT_PLAYBOOK.test(JSON.stringify(input.tool_input ?? {}))) save({ ...state, autopilot: true });
   },
   // Claude Code files away any additionalContext over 10,000 characters, measuring each hook's output on its own,
   // so hooks.json runs one SessionStart hook per part and each emits the part named by its argument.
