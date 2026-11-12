@@ -77,7 +77,7 @@ The default answer is `/poteto-mode`, which runs most of the others when its ste
 | Catch up on what changed in this chat since their last message, in plain words and small visuals, with every item waiting on them listed and decidable from the reply alone | [`/ketchup`](../ketchup/SKILL.md) |
 | Catch up like `/ketchup`, in a short subtitled video of slides, with the waiting calls as text under it | [`/ketchup-video`](../ketchup-video/SKILL.md) |
 | Know what a small diff could break outside itself | [`/blast-radius`](../blast-radius/SKILL.md) |
-| Take an idea, a foggy effort, or a ticket queue to shipped PRs, starting wherever it is | [`/shiro`](../shiro/SKILL.md) |
+| Take an idea, a foggy effort, or issues with open decisions to shipped PRs, starting wherever it is | `/poteto-mode` with the idea. It runs the [Idea to PRs playbook](../poteto-mode/playbooks/idea-to-prs.md) |
 | Get interviewed about a plan, a round of questions at a time, until every decision is settled | [`/grilling`](../grilling/SKILL.md) |
 | Get grilled while the glossary and hard decisions are written down as they settle | [`/grill-with-docs`](../grill-with-docs/SKILL.md) |
 | Cut settled multi-PR work into tickets with blocking edges, as a queue for Autopilot | [`/to-tickets`](../to-tickets/SKILL.md) |
@@ -136,6 +136,7 @@ Playbooks are step lists inside `/poteto-mode`, not skills, so they have no slas
 
 - "babysit this pr" or "check on pr 123" runs Babysit. It drives the PR to merge-ready and stops there. It doesn't merge unless the user asks to merge, land, or ship.
 - "land the stack" runs Shipping.
+- "take this idea to PRs" or "grill the open issues, then autopilot the rest" runs Idea to PRs. It stops after each stage.
 - "take over this branch" runs Session pickup.
 - "pause safely" runs Pause safely.
 - "full autopilot on this queue" runs Autopilot-full. "autopilot, don't merge" runs Autopilot-stack.

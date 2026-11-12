@@ -50,7 +50,7 @@ pick `/poteto-mode` from the `/` menu before you type your task, so cursor attac
 
 ### just use [`/poteto-mode`](./skills/poteto-mode/SKILL.md)
 
-this skill is the main shortcut. i use it whenever i need the agent to do rigorous engineering work. it comes with twenty-three playbooks:
+this skill is the main shortcut. i use it whenever i need the agent to do rigorous engineering work. it comes with twenty-four playbooks:
 
 ```
 /poteto-mode this pr has a subtle bug where the scroll drifts every 750ms even when idle. repro
@@ -63,7 +63,7 @@ morning.
 ```
 
 <details>
-<summary>the twenty-three playbooks</summary>
+<summary>the twenty-four playbooks</summary>
 
 | playbook | for |
 |---|---|
@@ -87,6 +87,7 @@ morning.
 | [autopilot-stack](./skills/poteto-mode/playbooks/autopilot-stack.md) | autopilot-full without the merge. build and verify prs for the operator to review and land, stacking a pr only on a pr it builds on. |
 | [session pickup](./skills/poteto-mode/playbooks/session-pickup.md) | resume or take over a prior agent's in-flight work. |
 | [pause safely](./skills/poteto-mode/playbooks/pause-safely.md) | suspend in-flight work cleanly so it can be resumed later. |
+| [idea to prs](./skills/poteto-mode/playbooks/idea-to-prs.md) | take an idea bigger than one pr, or issues with open decisions, to a queue autopilot runs: grilling or wayfinder, then tickets, then autopilot-stack, stopping after each stage. |
 | [multi-phase plan](./skills/poteto-mode/playbooks/multi-phase-plan.md) | work that spans phases or stacked PRs. |
 | [worktree cleanup](./skills/poteto-mode/playbooks/worktree-cleanup.md) | reclaim disk by pruning merged or abandoned worktrees and stale ios simulators, safety-gated. |
 | [opening a pr](./skills/poteto-mode/playbooks/opening-a-pr.md) | open a ready pr from small ordered commits with a conventional commits title and a briefing-style body. invoked at the end of every other playbook. |
@@ -134,7 +135,6 @@ to keep [`/poteto-mode`](./skills/poteto-mode/SKILL.md) on across turns, pick it
 | [`/ketchup`](./skills/ketchup/SKILL.md) | you want what changed in this chat since your last message, in plain words and small visuals, with every item waiting on you listed and decidable from the reply alone, even when that makes the reply long. |
 | [`/ketchup-video`](./skills/ketchup-video/SKILL.md) | you want the `/ketchup` catch-up as a short subtitled video of slides, with the calls waiting on you as text under it. |
 | [`/blast-radius`](./skills/blast-radius/SKILL.md) | you have a small-looking change and want to know what else it could break, with the one fact it's safe because of proven by running code, not asserted. |
-| [`/shiro`](./skills/shiro/SKILL.md) | you have an idea, a foggy effort, or a ticket queue and want it taken to shipped PRs: it picks the existing-codebase or from-scratch flow and starts the step you are at. runs only when you type `/shiro`. |
 | [`/grilling`](./skills/grilling/SKILL.md) | you have a plan or idea and want to be interviewed a round of questions at a time, each with a recommended answer, until every decision is settled. |
 | [`/wayfinder`](./skills/wayfinder/SKILL.md) | you're starting from scratch, or the effort is too big and foggy for one chat. charts the destination and a map of decision tickets, resolved one per session, until the way is clear. runs only when you type `/wayfinder`. |
 | [`/to-spec`](./skills/to-spec/SKILL.md) | a conversation or a cleared `/wayfinder` map has settled what to build and you want it as one spec. runs only when you type `/to-spec`. |
