@@ -56,6 +56,6 @@ Only record a decision when all three are true:
 If any of the three is missing, record nothing. [ADR-FORMAT.md](./ADR-FORMAT.md) says what qualifies. Where a qualifying decision goes:
 
 - The repo's `docs/agents/domain.md` keeps `docs/adr/` → write one ADR per [ADR-FORMAT.md](./ADR-FORMAT.md).
-- Otherwise, never create a file: piled-up decision files go unsearchable, so a decision lives where its work does. Record it in three places: the spec's `Implementation Decisions`, a comment at the code saying why, and a `Decision:` line in the commit or PR.
+- Otherwise, never create a file: piled-up decision files go unsearchable, so a decision lives where its work does. Record it in two places: the spec's `Implementation Decisions` and a `Decision:` line in the commit or PR.
 
 Adapted from [mattpocock/skills](https://github.com/mattpocock/skills) (MIT).
