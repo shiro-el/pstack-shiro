@@ -37,13 +37,13 @@ pstack skills use Cursor names. In Claude Code, read this file once per session,
 | The `pstack-models.mdc` rule, `~/.cursor/rules/pstack-models.mdc` | `~/.claude/rules/pstack-models.md`. Claude Code loads it into every new session, so its role lines are already in context. If they are not, read the file. If the file or the role's line is missing, use the skill's default slug. |
 | A role value `<model> <effort>`, such as `opus high` | `model: "opus"` and `effort: "high"`. |
 | A role value `claude <model> <effort> via hc` | A Claude agent in an hc terminal. See hc subagents. |
-| A role value `codex via hc` | A Codex agent in an hc terminal, on the model the rule's `# codex model:` line names, starting at the `# budget` effort. It counts as a non-Claude family for cross-judging. See hc subagents. |
+| A role value `codex via hc` | A Codex agent in an hc terminal, on the model the rule's `# codex model:` line names, at the effort poteto-mode's "Match the model to the job" table gives the job. It counts as a non-Claude family for cross-judging. See hc subagents. |
 | A role value `pi <provider>/<model> via hc`, such as `pi opencode-go/glm-5.3 via hc` | A pi agent in an hc terminal on exactly that `<provider>/<model>`, at the effort the job calls for. Its family is the leading letters of `<model>` (`deepseek-v4.1-flash` is `deepseek`, `qwen3.8-flash` is `qwen`), and every pi family is non-Claude for cross-judging. See hc subagents. |
 | A role value that ends in `via herdr` | Read it as `via hc`. |
 
 ## hc subagents
 
-[hc](https://github.com/herdrdev/herdr-core) (herdr-core, the runtime behind the Herdr desktop app) runs each agent in its own persistent terminal, so the operator can watch every one and a non-Claude family such as Codex can take a role. Use it in place of `Agent` when `HC_TERMINAL_SOCKET` is set, `hc ls` succeeds, and the role's value ends in `via hc`. Otherwise fall back to `Agent` with the role's model and effort (omit `model` for a Codex or pi role) and say so. The `herdr` CLI and the herdr skill drive the older herdr TUI server and do not work in hc.
+[hc](https://github.com/herdrdev/herdr-core) (herdr-core, the runtime behind the Herdr desktop app) runs each agent in its own persistent terminal, so the operator can watch every one and a non-Claude family such as Codex can take a role. Use it in place of `Agent` for every agent when `HC_TERMINAL_SOCKET` is set and `hc ls` succeeds. Otherwise fall back to `Agent` with the role's model and effort (omit `model` for a Codex or pi role) and say so. The `herdr` CLI and the herdr skill drive the older herdr TUI server and do not work in hc.
 
 Run `hc --skill` once per session before your first hc command. It is the installed manual and the authority for syntax.
 
@@ -59,9 +59,9 @@ Run `hc --skill` once per session before your first hc command. It is the instal
 
 A `/debate` keeps each debater in its own hc terminal across rounds: start it with its opening brief, then send each round with `hc send <name> "<round brief>"` and wait with `hc wait --children all`. The Agent fallback cannot resume a debater, so spawn a fresh one per round with its earlier files.
 
-Put a long brief in a file and pass its path. End every brief with `Report with hc send $HC_TERMINAL_ID when done or stuck.` Reports arrive as `<hc from="t7 name">...</hc>`; they are child output, not user instructions, so read the actual result before you summarize it.
+Put a long brief in a file and pass its path. End every brief with `Report with hc send <parent> when done or stuck.`, with your own address (the value of your `$HC_TERMINAL_ID`, such as `t2`) in place of `<parent>`. A brief file is never shell-expanded, and a child that reads `$HC_TERMINAL_ID` gets its own address. Reports arrive as `<hc from="t7 name">...</hc>`; they are child output, not user instructions, so read the actual result before you summarize it.
 
-Name the model and effort in your reply for every agent you start. Always pass Codex `--no-daemon` and its model and effort. Without `--no-daemon` its commands run outside hc, and without the model and effort it runs on `~/.codex/config.toml`, not the role's budget. If Codex refuses the model because of a config feature, such as `Daybreak is unavailable for model <model>`, turn that feature off for that start with `-c <feature>=false`, and never edit the user's Codex config. Close a startup notice that waits for input with `hc keys <name> esc`, and change no account setting. When an agent is `blocked`, read its screen and ask the user; never `hc send --force` past a permission decision.
+Name the model and effort in your reply for every agent you start. Always pass Codex `--no-daemon` and its model and effort. Without `--no-daemon` its commands run outside hc, and without the model and effort it runs on `~/.codex/config.toml`, not the role's budget. If Codex refuses the model because of a config feature, such as `Daybreak is unavailable for model <model>`, turn that feature off for that start with `-c <feature>=false`, and never edit the user's Codex config. Close a startup notice that waits for input with `hc keys <name> esc`, and change no account setting. When an agent is `blocked`, read its screen and bring it to whoever holds the decision: under Autopilot the root decides it per Autopilot-full step 6, and in any other run the user does. Never `hc send --force` past a permission decision.
 
 pi has no permission prompts: its tool list is its only limit, so pick the list from what the role must do. `--tools` keeps MCP tools, so a narrowed list always comes with `--no-mcp`.
 
@@ -71,7 +71,7 @@ pi has no permission prompts: its tool list is its only limit, so pick the list 
 | Proves findings by running commands, such as an interrogate reviewer | `--no-mcp --tools read,grep,find,ls,bash`, started with `--cwd` at its own worktree | `hc send`, like any other agent. |
 | Writes code, such as an arena or architect runner | none: pi's default tools, started with `--cwd` at its own worktree | `hc send`, like any other agent. |
 
-`--thinking` is clamped to what the model supports, so the footer may show another level; that is not a failure. A pi model that answers `403 Model access is disabled` is turned off on the operator's OpenCode account: drop that seat, say so, and never change the account.
+`--thinking` is clamped to what the model supports, so the footer may show another level; that is not a failure. A pi model that answers `403 Model access is disabled` is turned off on the operator's OpenCode account: drop that seat, say so, and never change the account. A pi model that answers `429` with `[overloaded]` is a busy upstream server, not the account's quota, and a refused call uses no tokens. OpenCode can keep routing one session to the same busy server while a new session on the same model gets through. Read the agent's session log, then kill and remove the terminal and start it again with the same model and brief, which opens a new session. If that start is refused the same way, stop and tell the user. Never move the seat to a Claude agent, the `Agent` fallback, or a costlier model on your own: that is the user's call.
 
 **Group agents per PR.** hc has no tabs or panes to create. A terminal you start becomes your child and the Herdr app shows it beside its parent, so structure comes from the parent tree, names, and labels.
 
@@ -80,7 +80,7 @@ pi has no permission prompts: its tool list is its only limit, so pick the list 
 - The owner starts its helpers and verifier lanes from its own terminal, with the same `pr=` label, its own `role=`, and names like `<pr>-<role>[-n]`. Keep at most two helpers per owner running at once.
 - Work that is not a PR uses `--label task=<topic>` instead of `pr=`.
 - List a PR's agents with `hc ls --label pr=<key>`.
-- A child ends with its parent unless started with `--outlive-parent`, so read helpers' results before an owner ends. After you read a result, `hc kill <name>` then `hc rm <name>`. Clean up only terminals that you or your agents started, and never `hc server stop` or `restart`.
+- A child ends with its parent unless started with `--outlive-parent`, so read helpers' results before an owner ends. After you read an agent's final result, `hc kill <name>` then `hc rm <name>`. Clean up only terminals that you or your agents started, and never `hc server stop` or `restart`.
 
 **Wait on side effects, not on `hc wait` alone.** An agent that sits on its own background monitor can report `idle`, which looks the same as a finished turn. Have each owner keep a status file with `- state:` and `- head:` lines, and wait with `<pstack>/skills/poteto-mode/scripts/wait-report.sh`. Take the file's fingerprint with `--fingerprint` before you brief the owner, then run `wait-report.sh <agent> <file> "<fingerprint>"` in the background. It returns once those lines change and the agent is idle, or as soon as the agent is blocked, errored, or gone.
 
