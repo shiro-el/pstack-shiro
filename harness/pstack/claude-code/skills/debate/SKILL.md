@@ -8,8 +8,6 @@ disable-model-invocation: true
 
 In Claude Code, read [the Claude Code adapter](../../docs/harness/claude-code.md) once per session before you follow this skill. It maps the Cursor names in pstack skills to Claude Code.
 
-In Claude Code, read [the Claude Code adapter](../../docs/harness/claude-code.md) once per session before you follow this skill. It maps the Cursor names in pstack skills to Claude Code.
-
 A debate settles a decision by making positions collide. Each debater defends an assigned stance, reads its opponents' latest positions every round, and answers them with evidence. A judge from another family rules on the transcript. Where `/arena` merges parallel attempts at one artifact, a debate keeps the disagreement and reports which arguments survived it.
 
 Open a todolist with one entry per phase (Frame, Opening, Rounds, Judge, Synthesis) before launching anything.

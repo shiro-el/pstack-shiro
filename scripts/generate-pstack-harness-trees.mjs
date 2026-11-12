@@ -91,6 +91,9 @@ const problems = [];
 const users = new Map();
 for (const [skill, { usesCursorNames, wrap }] of classes) {
   if (usesCursorNames.size > 0 && !wrap) problems.push(`skills/${skill}/SKILL.md uses Cursor names but has no H1`);
+  if (readFileSync(join(SKILLS, skill, "SKILL.md"), "utf8").includes("read [the Claude Code adapter]")) {
+    problems.push(`skills/${skill}/SKILL.md carries the Claude Code adapter line; delete it, this script adds it to the Claude Code tree`);
+  }
   for (const key of usesCursorNames) users.set(key, [...(users.get(key) ?? []), skill]);
   // Cursor runs a skill by its folder name and Claude Code lists it by its frontmatter `name`, so the two must match. The Agent Skills spec limits both to SKILL_NAME.
   const frontmatter = readFileSync(join(SKILLS, skill, "SKILL.md"), "utf8").match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "";
