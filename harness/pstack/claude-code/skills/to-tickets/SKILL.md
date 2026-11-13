@@ -33,7 +33,8 @@ Break the work into **tracer bullet** tickets.
 - Each slice cuts a narrow but COMPLETE path through every layer (schema, API, UI, verification): vertical, NOT a horizontal slice of one layer
 - A completed slice is demoable or verifiable on its own
 - Each slice is sized to fit in a single fresh context window
-- Any prefactoring should be done first
+- Any prefactoring should be done first. That includes shared test helpers and fixtures that several tickets would extend. One prefactor ticket extends them, and it blocks those tickets, so parallel owners do not each edit the same helper
+- Each acceptance criterion names its evidence: a test for behavior, a screenshot for how UI looks, or a live run when no test can reach it. Never a committed pixel test for a UI tweak
 
 </vertical-slice-rules>
 
@@ -78,8 +79,8 @@ Do NOT close or modify any parent issue.
 
 **Status:** ready-for-agent
 
-- [ ] Acceptance criterion 1
-- [ ] Acceptance criterion 2
+- [ ] Acceptance criterion 1 (evidence: test, screenshot, or live run)
+- [ ] Acceptance criterion 2 (evidence: ...)
 
 </local-ticket-template>
 
@@ -95,8 +96,8 @@ The end-to-end behaviour this ticket makes work, from the user's perspective, no
 
 ## Acceptance criteria
 
-- [ ] Criterion 1
-- [ ] Criterion 2
+- [ ] Criterion 1 (evidence: test, screenshot, or live run)
+- [ ] Criterion 2 (evidence: ...)
 
 ## Blocked by
 
