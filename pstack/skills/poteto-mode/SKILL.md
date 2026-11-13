@@ -19,6 +19,7 @@ Remaining triggers:
 - Your first message on a task → tell the user, in your own words, their goal, the problem they are solving, and, if the task ships a change, the smallest change you expect to meet it. Don't wait for confirmation. If the evidence rules out the change the user asked for, show it and stop. Restate the user's goal in each subagent brief, and open each PR's `## Why` with it. Open each final report with it too, your final reply included, except after a fully specified one-line edit.
 - Nontrivial change, architecture decision, or "are we sure?" → the **how** skill.
 - About to `AskQuestion` on a "which approach", "how should I", or "what should this do" fork → classify it before you ask. If the answer is a fact you could observe by running something (behavior, timing, layout, output, perf, even whether an eval separates), it is not the human's to answer. Sketch it via the Prototype playbook (`playbooks/prototype.md`) and let the result decide. If the task is a read-only Investigation whose deliverable is a cited answer, stay in it and answer from the evidence rather than building a sketch. Reserve the question for a genuine product or preference call no experiment can settle. Under a full-autonomy grant, decide a call the grant covers, act on it, and report it, with no reply word and no offer. Under the grant, for a call only the operator can make, apply a default, report it with a full explanation, and say in plain words what the operator could tell you to do instead. The operator answers in their own words. Never give a shorthand token to type back. Gates the operator named and the Always-pause list in Autonomy still need the operator.
+- Work cut from a ticket or a spec (from [`/to-tickets`](../to-tickets/SKILL.md), [`/to-spec`](../to-spec/SKILL.md), or an issue with `Decision:` lines) → the ticket and spec are the contract. **Spec-driven work** below holds the rules.
 - Any code → name the data shape first, and choose its organizing structure per **principle-model-the-domain**.
 - Code crossing a function boundary → the **architect** skill, parallel design exploration before implementing.
 - Parallel fan-out → the **swarm** skill for coverage matrices, races, gauntlets, and exploration partitions. Use **arena** for design or code bakeoffs with base selection and grafting.
@@ -35,6 +36,15 @@ Remaining triggers:
 - Bugbot or the agentic security review commented → skeptical posture. They catch real bugs and also file non-issues and nitpicks, so assess each on its merits and dismiss noise with a concrete reason instead of churning code. Triage fix / dismiss / ask per `references/bugbot-triage.md`.
 - Broken skill mid-task → fix it in its own PR. Don't block. Don't silently work around it.
 - Long, autonomous, or multi-phase work, or any task the user steps away from to review later ("going to bed", "trust it when i'm back", "/loop until X") → a decision trail via the **show-me-your-work** skill. Commit it when stakes need an auditable record. Keep it local otherwise.
+
+## Spec-driven work
+
+When the work comes from a ticket or a spec, the ticket's acceptance criteria and the spec's decisions say what to build. pstack decides how and proves it.
+
+- **Brief from the contract.** Give every delegate a pointer to its ticket and to the spec, not a pasted summary. The ticket's acceptance criteria are its success criteria.
+- **Do not reopen settled decisions.** The spec's Implementation Decisions and Testing Decisions, and an issue's `Decision:` lines, are settled. Design work such as **how**, **architect**, or **arena** covers only what they leave open.
+- **Record every departure where the contract lives.** You may fill a gap the contract leaves, or depart from it when evidence rules a decision out. A product call answered with a default counts as either one. Record it as a comment on the ticket, per [TRACKERS.md](../to-tickets/TRACKERS.md). Use `Assumption: <what>, because <why>. To reverse: <what the operator would say>` for a gap, and `Deviation: <decision> → <what you did>, because <evidence>. To reverse: <...>` for a departure. A `Deviation:` from a spec decision also goes on the spec, as a comment on a spec issue or an entry under `## Amendments` at the end of `spec.md`. A report or a decision trail alone does not count, because the next agent reads the ticket and the spec, not your report.
+- **An unmet criterion is not done.** If an acceptance criterion cannot be met, record a `Deviation:` and report the ticket as blocked or partial. Never drop the criterion silently.
 
 ## Principles
 
