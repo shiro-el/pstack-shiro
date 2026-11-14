@@ -49,9 +49,9 @@ Run `hc --skill` once per session before your first hc command. It is the instal
 
 | Step | Command |
 | --- | --- |
-| Start a Claude agent with its brief | `hc run --bg --json --name <name> --cwd <repo> --label pr=<key> --label role=<role> --label 'pstack-role=<role line>' -- claude --model <model> --effort <effort> "<brief>"`, where `<role line>` is the pstack role the spawn runs as, such as `bug-fix` or `hardest tasks`. A launch hook outside pstack refuses `opus` or `fable` without this label. |
-| Start a Codex agent with its brief | `hc run --bg --json --name <name> --cwd <repo> --label pr=<key> --label role=<role> -- codex --no-daemon -m <model> -c model_reasoning_effort=<effort> "<brief>"` |
-| Start a pi agent with its brief | `hc run --bg --json --name <name> --cwd <repo> --label pr=<key> --label role=<role> -- pi --tui-mode regular --model <provider>/<model> --thinking <effort> <tools> -- "<brief>"`, with `<tools>` from the pi tool table below |
+| Start a Claude agent with its brief | `hc run --bg --json --name <name> --cwd <repo> --label pr=<key> --label role=<role> --label 'pstack-role=<role line>' -- claude --model <model> --effort <effort> "<brief>"`, where `<role line>` is the pstack role the spawn runs as, such as `bug-fix` or `hardest tasks`. Every pstack start carries this label, the Codex and pi starts below too. The launch hook checks the pstack budget (an explicit effort, the role's Codex or pi model) only on labelled starts, and refuses `opus` or `fable` on unlabelled ones. |
+| Start a Codex agent with its brief | `hc run --bg --json --name <name> --cwd <repo> --label pr=<key> --label role=<role> --label 'pstack-role=<role line>' -- codex --no-daemon -m <model> -c model_reasoning_effort=<effort> "<brief>"` |
+| Start a pi agent with its brief | `hc run --bg --json --name <name> --cwd <repo> --label pr=<key> --label role=<role> --label 'pstack-role=<role line>' -- pi --tui-mode regular --model <provider>/<model> --thinking <effort> <tools> -- "<brief>"`, with `<tools>` from the pi tool table below |
 | Steer it later | `hc send <name> "<message>"`. Never send to an agent that is still booting; put the first brief in `hc run`. |
 | Wait for it | `hc wait <name>`, or `hc wait --children any` for several. `reason: timeout` is a check-in, and an early `idle` at turn 0 means it has not started yet: wait again. Never sleep-poll. |
 | Read its result | `hc read <name> --lines <n>` |
