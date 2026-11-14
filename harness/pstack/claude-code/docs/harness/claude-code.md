@@ -35,8 +35,8 @@ pstack skills use Cursor names. In Claude Code, read this file once per session,
 | A `grok-*`, `gpt-*`, or other non-Claude slug | Omit `model` so the agent runs on the session model, and say so. |
 | `auto` or `inherit-parent` | Omit `model`. |
 | The `pstack-models.mdc` rule, `~/.cursor/rules/pstack-models.mdc` | `~/.claude/rules/pstack-models.md`. Claude Code loads it into every new session, so its role lines are already in context. If they are not, read the file. If the file or the role's line is missing, use the skill's default slug. |
-| A role value `<model> <effort>`, such as `opus high` | `model: "opus"` and `effort: "high"`. |
-| A role value `claude <model> <effort> via hc` | A Claude agent in an hc terminal. See hc subagents. |
+| A role value `<model> <effort>`, such as `opus high` | A Claude role. `model` and `effort` come from the job's row in poteto-mode's "Match the model to the job" table, such as `model: "sonnet"` and `effort: "medium"`. The line's own `opus high` is used only where that table says to start the line as written. |
+| A role value `claude <model> <effort> via hc` | A Claude agent in an hc terminal, on the tier and effort the job's row in poteto-mode's "Match the model to the job" table gives, passed as `--model <tier> --effort <effort>`. The line's own model and effort are a fallback only. Other programs, such as the assistant app, still read them, so keep them in the line. See hc subagents. |
 | A role value `codex via hc` | A Codex agent in an hc terminal, on the model the rule's `# codex model:` line names, at the effort poteto-mode's "Match the model to the job" table gives the job. It counts as a non-Claude family for cross-judging. See hc subagents. |
 | A role value `pi <provider>/<model> via hc`, such as `pi opencode-go/glm-5.3 via hc` | A pi agent in an hc terminal on exactly that `<provider>/<model>`, at the effort the job calls for. Its family is the leading letters of `<model>` (`deepseek-v4.1-flash` is `deepseek`, `qwen3.8-flash` is `qwen`), and every pi family is non-Claude for cross-judging. See hc subagents. |
 | A role value that ends in `via herdr` | Read it as `via hc`. |
