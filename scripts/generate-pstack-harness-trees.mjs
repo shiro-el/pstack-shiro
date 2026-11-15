@@ -49,6 +49,9 @@ const TERMS = [
   { key: "~/.cursor/plugins/", re: /\.cursor\/plugins|\.cursor-plugin/ },
   { key: ".cursor/rules/", re: /\.cursor\/rules|always-applied rule/ },
   { key: "agent-transcripts", re: /agent-transcripts|\.cursor\/projects/ },
+  { key: "`cursor-team-kit`", re: /cursor-team-kit/ },
+  { key: "`/loop`", re: /(^|[\s`(])\/loop\b(?!-)/m },
+  { key: "The agent store", re: /agent's store|agent store|Project store|Project tracker/ },
   { key: "Cursor-only features", re: /Bugbot|Cursor [Aa]utomation|cursor\.(sh|com)\/automations|[Cc]loud [Aa]gent|built-in PR tool/ },
 ];
 const ROUTE_KEY = "Run another pstack skill";

@@ -11,6 +11,9 @@ pstack skills use Cursor names. In Claude Code, read this file once per session,
 | Open a todolist | Use `TodoWrite` if the session offers it. Otherwise keep the list in your reply and update it at each phase. |
 | Run another pstack skill (`/name` or "the **name** skill") | `Read` `<pstack>/skills/<name>/SKILL.md` and follow it. The `Skill` tool refuses most pstack skills. When you tell the user to type it, write `/pstack:<name>`. |
 | `Grep`, `Glob` | `Bash` with `rg` when the session has no `Grep` or `Glob`. |
+| `/loop` typed by the user | Claude Code's own `/loop`. It works as the skill describes. |
+| A step that tells you to run under `/loop`, arm a watcher, or wake on an event | You cannot start `/loop` yourself, so arm the wake directly. For one event, such as a PR verdict or a CI run ending, run a command that exits on that event with `Bash` `run_in_background: true`, such as the bare `watch-pr`. Its exit wakes you. For a line per event, use `Monitor` with `timeout_ms` at its maximum, and re-arm it each time it expires. For hc agents, wait as hc subagents below says. Only when nothing can signal the event: `ScheduleWakeup` if the user started this session with `/loop`, otherwise a one-shot `CronCreate`. Never end a turn while you wait on something with no wake armed, because nothing will prompt you again. |
+| A skill from the `cursor-team-kit` plugin, such as `deslop`, `control-ui`, or `control-cli` | The `cursor-team-kit` plugin from the same `cursor-plugins` marketplace. Run it with the `Skill` tool as `cursor-team-kit:<name>`, and write `/cursor-team-kit:<name>` when you tell the user to type it. If the `Skill` tool does not list it, do not skip the step: stop and tell the user to run `claude plugin install cursor-team-kit@cursor-plugins`. |
 
 ## Subagent fields
 
@@ -101,6 +104,7 @@ Claude Code loads every `.md` file in `~/.claude/rules/` into each new session, 
 | `~/.cursor/plugins/`, `.cursor-plugin/plugin.json` | `~/.claude/plugins/`, `.claude-plugin/plugin.json` |
 | `.cursor/rules/*.mdc`, always-applied rules | `CLAUDE.md`, or `AGENTS.md` when no `CLAUDE.md` exists. Claude Code never reads `.mdc` files. The model rule is the exception. See Models. |
 | `https://github.com/cursor/plugins/blob/main/pstack/<path>` | `<pstack>/<path>` when that file exists. The plugin ships the skills, `docs/guide/`, and `README.md`. Read the local copy and never fetch it. Give the user the URL when they need a link. |
+| The agent store: the root agent's store, the agent store's `docs/`, the Project store, and the Project tracker (`notes.md`) | `~/.claude/state/pstack/store/<repo>-<task-slug>/`. Claude Code's system prompt names no store, so the root creates this folder when the run starts and puts its absolute path in every brief. Every agent in the run uses the path its brief names and never makes its own. The decision trail, the agent records, `docs/`, and `notes.md` all go in it. An agent that takes over a run with no path finds the folder there by repo and task. |
 | Transcripts in `~/.cursor/projects/<slug>/agent-transcripts/` | `~/.claude/projects/<slug>/<session>.jsonl`. The slug is the workspace path with each `/` and `.` changed to `-`, so `/Users/you/proj` is `-Users-you-proj`. The newest `.jsonl` directly in that folder is the current session. Its `<session>/subagents/` folder holds subagent transcripts. Read only this workspace's folder. |
 
 ## Cursor-only features
