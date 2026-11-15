@@ -35,7 +35,7 @@ pstack skills use Cursor names. In Claude Code, read this file once per session,
 | Cursor | Claude Code |
 | --- | --- |
 | `claude-<family>-<version>-<effort>[-fast]`, such as `claude-opus-5-5-xhigh` | `model: "opus"` and `effort: "xhigh"`. `model` takes only `opus`, `sonnet`, `haiku`, `fable`. Drop `-fast`. |
-| A `grok-*`, `gpt-*`, or other non-Claude slug | Omit `model` so the agent runs on the session model, and say so. |
+| A `gemini-*` or other non-Claude slug | Omit `model` so the agent runs on the session model, and say so. |
 | `auto` or `inherit-parent` | Omit `model`. |
 | The `pstack-models.mdc` rule, `~/.cursor/rules/pstack-models.mdc` | `~/.claude/rules/pstack-models.md`. Claude Code loads it into every new session, so its role lines are already in context. If they are not, read the file. If the file or the role's line is missing, use the skill's default slug. |
 | A role value `<model> <effort>`, such as `opus high` | A Claude role. `model` and `effort` come from the job's row in poteto-mode's "Match the model to the job" table, such as `model: "sonnet"` and `effort: "medium"`. The line's own `opus high` is used only where that table says to start the line as written. |
@@ -70,7 +70,7 @@ pi has no permission prompts: its tool list is its only limit, so pick the list 
 
 | pi role | `<tools>` | Reports |
 | --- | --- | --- |
-| Reads and judges only: any spawn the skill marks readonly, such as the arena cross-judge or a how explorer | `--no-mcp --tools read,grep,find,ls` | It has no shell, so it cannot `hc send`. Leave the report line out of its brief and ask for the whole answer in its final message. Wait with `hc wait <name>` until its status is `done`, then `hc read <name> --lines <n>`. |
+| Reads and judges only: any spawn the skill marks readonly, such as the arena cross-judge or the how subagent | `--no-mcp --tools read,grep,find,ls` | It has no shell, so it cannot `hc send`. Leave the report line out of its brief and ask for the whole answer in its final message. Wait with `hc wait <name>` until its status is `done`, then `hc read <name> --lines <n>`. |
 | Proves findings by running commands, such as an interrogate reviewer | `--no-mcp --tools read,grep,find,ls,bash`, started with `--cwd` at its own worktree | `hc send`, like any other agent. |
 | Writes code, such as an arena or architect runner | none: pi's default tools, started with `--cwd` at its own worktree | `hc send`, like any other agent. |
 
@@ -92,7 +92,7 @@ pi has no permission prompts: its tool list is its only limit, so pick the list 
 Claude Code loads every `.md` file in `~/.claude/rules/` into each new session, so `setup-pstack` writes its rule there. Follow its steps with these changes:
 
 - Detect. The detected models are the `model` values that the `Agent` tool schema lists, each with an effort from its `effort` values. Write a real model as `<model> <effort>`, such as `opus xhigh`. The effort is the last token, so the budget step works as written.
-- Defaults. Map each default slug with the rows above: `claude-opus-5-5-xhigh` is `opus xhigh`, and `grok-4.7-xhigh-fast` is `inherit-parent`.
+- Defaults. Map each default slug with the rows above: `claude-opus-5-5-xhigh` is `opus xhigh`, `claude-opus-5-5-high-fast` is `opus high`, `claude-fable-5-2-max` is `fable max`, and `gemini-4-carbon-high` is `inherit-parent`.
 - hc. When `HC_TERMINAL_SOCKET` is set and `hc ls` succeeds, offer to run roles through hc. On yes, write a Claude role as `claude <model> <effort> via hc` and a role you give to Codex as `codex via hc`, and add a `# codex model: <model>` comment line. Keep every `pi <provider>/<model> via hc` entry from the existing rule as it is written; setup-pstack does not detect pi models. How to start and group these agents lives in hc subagents above, so the rule holds only the role lines.
 - Write. Write `~/.claude/rules/pstack-models.md` with no frontmatter, then the comment lines, the `# budget` line, and one line per role from step 5. Overwrite the whole file. Never put the role lines in `CLAUDE.md` or `AGENTS.md`.
 
