@@ -30,7 +30,7 @@ Run the **arena** skill with the design-sketch task and the Phase A grounding ar
 
 Take the runners from the `architect runners` line in the `pstack-models.mdc` rule, in place of the `arena runners` line. If the rule or that line is missing, use `claude-fable-5-2-high`, `claude-opus-5-5-high-fast`, and `gemini-4-carbon-high`. Alias and rejected entries follow the runner rules in the **arena** skill's Phase A.
 
-Design it twice. Require at least two structurally distinct candidates before synthesis, even when the first looks sufficient. This is the **exhaust-the-design-space** principle skill made concrete. Whole-shape alternatives, not point fixes inside one shape.
+Require two structurally distinct designs before synthesis, per the **exhaust-the-design-space** principle skill. Prefer one owner per piece of state, one way to do each task, and the design that asks least of callers.
 
 Screen every candidate against [`references/design-red-flags.md`](references/design-red-flags.md) before synthesis. Assume the next contributor is an agent that sees only the files it opened, copies the nearest example, and takes the shortest path that compiles. Prefer the design where a change that looks right from one file is right for the whole repo.
 

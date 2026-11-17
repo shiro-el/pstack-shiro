@@ -14,8 +14,6 @@ Bundled skills live at `../<name>/SKILL.md` from this file, so put this file's a
 
 The Principles section below grounds every trigger. In your reply, name each principle that shaped a decision and the specific choice it changed. Cite only principles whose leaf SKILL.md you read this session.
 
-Remaining triggers:
-
 - Your first message on a task → tell the user, in your own words, their goal, the problem they are solving, and, if the task ships a change, the smallest change you expect to meet it. Don't wait for confirmation. If the evidence rules out the change the user asked for, show it and stop. Restate the user's goal in each subagent brief, and open each PR's `## Why` with it. Open each final report with it too, your final reply included, except after a fully specified one-line edit.
 - About to `AskQuestion` on a "which approach", "how should I", or "what should this do" fork → classify it before you ask. If the answer is a fact you could observe by running something (behavior, timing, layout, output, perf, even whether an eval separates), it is not the human's to answer. Sketch it via the Prototype playbook (`playbooks/prototype.md`) and let the result decide. If the task is a read-only Investigation whose deliverable is a cited answer, stay in it and answer from the evidence rather than building a sketch. Reserve the question for a genuine product or preference call no experiment can settle. Under a full-autonomy grant, decide a call the grant covers, act on it, and report it, with no reply word and no offer. Under the grant, for a call only the operator can make, apply a default, report it with a full explanation, and say in plain words what the operator could tell you to do instead. The operator answers in their own words. Never give a shorthand token to type back. Gates the operator named and the Always-pause list in Autonomy still need the operator.
 - Work cut from a ticket or a spec (from [`/to-tickets`](../to-tickets/SKILL.md), [`/to-spec`](../to-spec/SKILL.md), or an issue with `Decision:` lines) → the ticket and spec are the contract. **Spec-driven work** below holds the rules.
@@ -101,6 +99,8 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 ## Subagents
 
+In each kickoff, put the absolute path to [worker.md](worker.md) on the first line. Keep any required first-line marker first. A child that delegates passes the same path. If the target cannot read that path, include the contents of the file in the kickoff. Keep the role, task, and acceptance criteria in the brief.
+
 **Use `subagent_type: "poteto-agent"` for any subagent you spawn inside a playbook step** (code-writing delegates, ad-hoc helpers). The chat that receives `/poteto-mode` runs the playbook. Never spawn a `poteto-agent` to run the playbook itself. Routed workflow skills (`interrogate`, `reflect`, `swarm`) set their own `subagent_type` for diverse-model review. Respect what the skill prescribes, don't override to `poteto-agent`.
 
 **Defaults for every `Task` call.** `run_in_background: true` (a steer or resume of a running agent too, because a foreground call holds your turn while other reports wait), agent mode (readonly strips MCP), file pointers not inlined context, and the model from the role's line in the `/setup-pstack` rule. Those lines also set the models of the routed skills (`arena`, `swarm`, `architect`, `interrogate`, `reflect`, `debate`). Each code playbook reads its line (`feature, refactoring`, `bug-fix`, `perf-issue`, or `hillclimb`), the hardest changes (cross-cutting design, gnarly concurrency, subtle algorithms) read `hardest tasks`, and prose and judgment read `judgment and prose`. A role line of `inherit-parent` or `auto` runs on the parent chat model (omit Task `model`). A role with no line runs on the skill's default model.
@@ -129,16 +129,9 @@ You own every subagent's work. Review the diff and write your own summary, don't
 
 ## Writing the reply
 
-Write the reply clean as you draft it. A cleanup pass after drafting does not remove these patterns.
+Lead with what changes for the user and the maintainer. Use short declarative sentences with no long dash or colon as a connector. Keep the sections the playbook asks for. Link only artifacts you read or produced. Give each claim evidence or label it measured, inferred, or a guess. Run every check you can.
 
-- **Short declarative sentences.** One thought per sentence, ended with a period.
-- **No long-dash character anywhere.** Write a file-list bullet as a sentence ("`main.js` owns persistence and the IPC handlers") and a bold section header as its own sentence ("**Verification.** End to end via CDP").
-- **A colon as a mid-sentence connector is also out** (unslop rule 14). A colon before a list is fine.
-- **Terse is not an excuse to drop content.** Short sentences, but every section the playbook's reply names stays: details, tradeoffs, choices, open decisions.
 - **Raise an open decision once.** It goes in the reply that first raises it. If the human answers with other work instead, they saw it and chose not to answer yet; do not restate it in later replies. Restate it only when the human asks what is still open, or when the next step you are about to take cannot proceed without it, and then once, naming the step it blocks.
-- **Frame impact for the consumer and the maintainer.** Name who the work is for (an end user, a colleague importing the library) and what changes for them before any implementation detail. Then what the next engineer who owns this code inherits. If you can't say what either would notice, the work or the explanation is off.
-- **Never fabricate a link, citation, or transcript reference.** Link only artifacts you produced or read this session.
-- **Every claim carries its evidence or its label in the same sentence.** Measured, inferred, or guess. A prediction or an unseen cause is a guess. Never hand the human a check you could run.
 
 Every playbook ends with a reply written this way, PR link as `https://github.com/<owner>/<repo>/pull/<number>`. Each playbook's own reply lines name only the content unique to that playbook.
 

@@ -10,7 +10,7 @@ In Claude Code, read [the Claude Code adapter](../../docs/harness/claude-code.md
 
 Mine the current conversation for durable learnings, then route them into skill edits.
 
-Invoke when the user says "reflect" or "/reflect". Skip when the conversation is trivial, off-topic, or already covered by an existing skill the parent followed correctly. One-offs are not learnings.
+Invoke when the user says "reflect" or "/reflect". Skip when the conversation is trivial, off-topic, or already covered by an existing skill the parent followed correctly. Keep a finding when it is likely to hold in six months, changes what a future agent does, and has a concrete destination. Drop one-offs and details that drift, such as SHAs or version numbers.
 
 ## 1. Locate the active transcript
 
@@ -42,13 +42,13 @@ One `Task` call, `subagent_type: generalPurpose`, `model` from the `reflect judg
 
 ## 4. Structural enforcement check
 
-Move any Accepted item that a lint rule, script, metadata flag, or runtime check would enforce more reliably to Backlog. See the **encode-lessons-in-structure** principle skill.
+Move any Accepted item a lint rule, script, metadata flag, or runtime check could enforce to Backlog. Point to an existing mechanism that can own the check when one exists. See the **encode-lessons-in-structure** principle skill.
 
 ## 5. Apply
 
 Present the synthesizer's full Accepted / Rejected / Backlog output and wait for explicit approval before applying any Accepted edit. The user picks the subset and may redirect routings. Skill changes affect every future agent in the org. Do not auto-apply.
 
-File each Backlog item to your team's devex or backlog tracker without waiting. Only the Accepted list waits for approval.
+Include Backlog in the proposal. Keep external issue creation under the same approval as edits.
 
 Never edit a skill under `plugins/cache/`. Before approval, show its destination, `.cursor/skills/<skill>/` or `~/.cursor/skills/<skill>/`. After approval, copy the skill folder there and edit the copy. Never open a PR or push.
 
@@ -67,5 +67,5 @@ Short list, no preamble:
 
 - Edits applied: `<skill path>`. What changed, one line each.
 - New skills created: `<skill path>`. One line each (rare).
-- Backlog filed to the devex tracker: `<issue title>` (`<tags>`). One line each.
+- Backlog proposals and any issues opened with approval. One line each.
 - Dropped: one line per rejected finding + reason from the synthesizer.
