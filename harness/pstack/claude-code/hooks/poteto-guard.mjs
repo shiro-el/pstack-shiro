@@ -1,5 +1,7 @@
 #!/usr/bin/env node
-// Claude Code hooks that hold an Autopilot run to its playbooks across compaction.
+// Claude Code hooks for sessions that run poteto-mode: the root that the user invoked /pstack:poteto-mode in, and every
+// child whose kickoff names poteto-mode's worker.md. Such a session opens a PR only after it has loaded the skills that
+// Opening a PR runs over the diff and the PR text, and an Autopilot run is held to its playbooks across compaction.
 // A session enters Autopilot only when the user has invoked /pstack:poteto-mode in it and the agent then reads an
 // Autopilot playbook. A word in a prompt, reply, or todo is not the signal: Idea to PRs names Autopilot as a later stage
 // while it is still grilling the operator, and its Autopilot stage starts turns after the invocation. The state lives
@@ -13,7 +15,17 @@ const PLUGIN = process.env.CLAUDE_PLUGIN_ROOT ?? join(dirname(fileURLToPath(impo
 const STATE = join(process.env.CLAUDE_PLUGIN_DATA ?? join(homedir(), ".claude", "state", "pstack"), "autopilot");
 const COMMAND = /^(pstack:)?poteto-mode$/;
 const AUTOPILOT_PLAYBOOK = /playbooks\/autopilot-(full|stack)\.md/;
+const WORKER = "skills/poteto-mode/worker.md";
 const READERS = new Set(["Read", "Bash"]);
+// Opening a PR runs these over the diff and the PR text. pstack skills load by reading their SKILL.md (the Skill tool
+// refuses most of them); deslop comes from cursor-team-kit and loads either way.
+const PR_SKILLS = {
+  deslop: "the Skill tool with `cursor-team-kit:deslop`",
+  "no-comments": "Read `<pstack>/skills/no-comments/SKILL.md`",
+  "technical-writing": "Read `<pstack>/skills/technical-writing/SKILL.md`",
+  unslop: "Read `<pstack>/skills/unslop/SKILL.md`",
+};
+const OPENS_PR = /(?:^|[;&|(\n]|\$\()\s*(?:\w+=\S*\s+)*(?:gh|origin)\s+pr\s+(?:create\b|edit\b[^;&|\n]*\s(?:--body|--body-file|--title|-[bFt])\b)/;
 const WEEK = 7 * 24 * 60 * 60 * 1000;
 // Must match the number of SessionStart entries in hooks.json.
 const SLOTS = 6;
@@ -45,10 +57,23 @@ const handlers = {
     if (!COMMAND.test(String(input.command_name ?? ""))) return;
     save({ ...load(), poteto: true });
   },
+  UserPromptSubmit() {
+    if (!String(input.prompt ?? "").includes(WORKER)) return;
+    const state = load();
+    if (!state.poteto) save({ ...state, poteto: true });
+  },
   PostToolUse() {
     const state = load();
-    if (!state.poteto || state.autopilot || !READERS.has(input.tool_name)) return;
-    if (AUTOPILOT_PLAYBOOK.test(JSON.stringify(input.tool_input ?? {}))) save({ ...state, autopilot: true });
+    if (!state.poteto) return;
+    const loaded = new Set(state.loaded ?? []);
+    const text = JSON.stringify(input.tool_input ?? {});
+    for (const name of Object.keys(PR_SKILLS)) {
+      const skill = input.tool_name === "Skill" && new RegExp(`(^|:)${name}$`).test(String(input.tool_input?.skill ?? ""));
+      if (skill || (READERS.has(input.tool_name) && text.includes(`skills/${name}/SKILL.md`))) loaded.add(name);
+    }
+    const autopilot = state.autopilot || (READERS.has(input.tool_name) && AUTOPILOT_PLAYBOOK.test(text));
+    if (loaded.size !== (state.loaded ?? []).length || autopilot !== Boolean(state.autopilot))
+      save({ ...state, loaded: [...loaded], ...(autopilot ? { autopilot: true } : {}) });
   },
   // Claude Code files away any additionalContext over 10,000 characters, measuring each hook's output on its own,
   // so hooks.json runs one SessionStart hook per part and each emits the part named by its argument.
@@ -67,7 +92,19 @@ const handlers = {
     reply({ hookSpecificOutput: { hookEventName: "SessionStart", additionalContext: `${index === 0 ? `${lead}\n\n` : ""}${parts[index]}${overflow}` } });
   },
   PreToolUse() {
-    if (!load().autopilot) return;
+    const state = load();
+    if (input.tool_name === "Bash") {
+      if (!state.poteto || !OPENS_PR.test(String(input.tool_input?.command ?? ""))) return;
+      const missing = Object.keys(PR_SKILLS).filter((name) => !(state.loaded ?? []).includes(name));
+      if (missing.length === 0) return;
+      deny(
+        `This session runs poteto-mode, and Opening a PR (<pstack>/skills/poteto-mode/playbooks/opening-a-pr.md) runs ${missing.join(", ")} ` +
+          `before a PR is created or its title or body is written. Load each one and apply it to the diff and the PR text, then run this command again: ` +
+          `${missing.map((name) => `${name}: ${PR_SKILLS[name]}`).join("; ")}. <pstack> is ${PLUGIN}.`,
+      );
+      return;
+    }
+    if (!state.autopilot) return;
     if (input.tool_name === "AskUserQuestion") {
       deny(
         "This session runs a pstack Autopilot program under a full-autonomy grant. A product or scope call does not stop the run: " +
@@ -86,7 +123,6 @@ const handlers = {
         );
         return;
       }
-      const state = load();
       const nudged = state.cronNudged ?? [];
       if (nudged.includes(cron)) return;
       save({ ...state, cronNudged: [...nudged, cron] });

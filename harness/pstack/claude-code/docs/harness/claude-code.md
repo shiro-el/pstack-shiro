@@ -8,7 +8,7 @@ pstack skills use Cursor names. In Claude Code, read this file once per session,
 | --- | --- |
 | `Task` | `Agent` |
 | `AskQuestion` | `AskUserQuestion`. In `-p` mode it is absent, so ask in plain text. |
-| Open a todolist | Use `TodoWrite` if the session offers it. Otherwise keep the list in your reply and update it at each phase. |
+| Open a todolist | Use `TodoWrite` if the session offers it. Otherwise skip the list; do not keep it in your reply. |
 | Run another pstack skill (`/name` or "the **name** skill") | `Read` `<pstack>/skills/<name>/SKILL.md` and follow it. The `Skill` tool refuses most pstack skills. When you tell the user to type it, write `/pstack:<name>`. |
 | `Grep`, `Glob` | `Bash` with `rg` when the session has no `Grep` or `Glob`. |
 | `/loop` typed by the user | Claude Code's own `/loop`. It works as the skill describes. |

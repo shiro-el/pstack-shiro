@@ -1,5 +1,5 @@
 {
-  "description": "Hold a pstack Autopilot run to its playbooks across compaction",
+  "description": "Gate poteto-mode PRs on the Opening a PR skills, and hold a pstack Autopilot run to its playbooks across compaction",
   "hooks": {
     "UserPromptExpansion": [
       {
@@ -7,7 +7,18 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\"",
             "timeout": 10
           }
         ]
@@ -15,11 +26,11 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "Read|Bash",
+        "matcher": "Read|Bash|Skill",
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\"",
             "timeout": 10
           }
         ]
@@ -31,32 +42,32 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\" 0",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\" 0",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\" 1",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\" 1",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\" 2",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\" 2",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\" 3",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\" 3",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\" 4",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\" 4",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\" 5",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\" 5",
             "timeout": 10
           }
         ]
@@ -64,11 +75,11 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "AskUserQuestion|CronCreate",
+        "matcher": "AskUserQuestion|CronCreate|Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\"",
             "timeout": 10
           }
         ]

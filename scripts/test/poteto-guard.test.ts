@@ -5,12 +5,12 @@ import { spawnSync } from "node:child_process";
 import { afterEach, beforeEach, test } from "node:test";
 import assert from "node:assert/strict";
 
-const hook = join(import.meta.dirname, "..", "..", "pstack", "docs", "harness", "claude-code-hooks", "autopilot-guard.mjs");
+const hook = join(import.meta.dirname, "..", "..", "pstack", "docs", "harness", "claude-code-hooks", "poteto-guard.mjs");
 let dir: string;
 let transcript: string;
 
 beforeEach(() => {
-  dir = mkdtempSync(join(tmpdir(), "autopilot-guard-"));
+  dir = mkdtempSync(join(tmpdir(), "poteto-guard-"));
   transcript = join(dir, "transcript.jsonl");
   writeFileSync(transcript, "");
 });
@@ -52,4 +52,29 @@ test("a full autopilot request holds the run once its playbook is read", () => {
 test("reading an Autopilot playbook outside poteto-mode leaves the session alone", () => {
   tool("Read", { file_path: playbook("autopilot-stack") });
   assert.ok(asks(), "no poteto-mode, no Autopilot");
+});
+
+const kickoff = (text: string) => fire("UserPromptSubmit", { prompt: text });
+const opens = (command: string) => !fire("PreToolUse", { tool_name: "Bash", tool_input: { command } }).includes('"deny"');
+const loadPrSkills = () => {
+  tool("Skill", { skill: "cursor-team-kit:deslop" });
+  for (const name of ["no-comments", "technical-writing", "unslop"]) tool("Read", { file_path: `/plugin/skills/${name}/SKILL.md` });
+};
+
+test("a poteto-mode child cannot open a PR before it loads the Opening a PR skills", () => {
+  kickoff("[marker]\n/plugin/skills/poteto-mode/worker.md Read your full brief at /x/BRIEF.md");
+  assert.ok(!opens("cd /repo && gh pr create --base main --title t --body b"), "PR create denied");
+  loadPrSkills();
+  assert.ok(opens("cd /repo && gh pr create --base main --title t --body b"), "PR create allowed once loaded");
+});
+
+test("rewriting a PR body counts as opening a PR, a status read does not", () => {
+  invoke("issue #1");
+  assert.ok(opens("gh pr view 12 --json body"), "read allowed");
+  assert.ok(!opens("gh pr edit 12 --body-file /tmp/body.md"), "body rewrite denied");
+});
+
+test("a session that never ran poteto-mode opens PRs freely", () => {
+  kickoff("fix the typo in README");
+  assert.ok(opens("gh pr create --fill"), "no poteto-mode, no gate");
 });
