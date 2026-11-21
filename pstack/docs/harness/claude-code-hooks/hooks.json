@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\"",
             "timeout": 10
           }
         ]
@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\"",
             "timeout": 10
           }
         ]
@@ -30,7 +30,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\"",
             "timeout": 10
           }
         ]
@@ -42,32 +42,32 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\" 0",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\" 0",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\" 1",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\" 1",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\" 2",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\" 2",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\" 3",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\" 3",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\" 4",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\" 4",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\" 5",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\" 5",
             "timeout": 10
           }
         ]
@@ -79,7 +79,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/poteto-guard.mjs\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/autopilot-guard.mjs\"",
             "timeout": 10
           }
         ]

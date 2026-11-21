@@ -5,12 +5,12 @@ import { spawnSync } from "node:child_process";
 import { afterEach, beforeEach, test } from "node:test";
 import assert from "node:assert/strict";
 
-const hook = join(import.meta.dirname, "..", "..", "pstack", "docs", "harness", "claude-code-hooks", "poteto-guard.mjs");
+const hook = join(import.meta.dirname, "..", "..", "pstack", "docs", "harness", "claude-code-hooks", "autopilot-guard.mjs");
 let dir: string;
 let transcript: string;
 
 beforeEach(() => {
-  dir = mkdtempSync(join(tmpdir(), "poteto-guard-"));
+  dir = mkdtempSync(join(tmpdir(), "autopilot-guard-"));
   transcript = join(dir, "transcript.jsonl");
   writeFileSync(transcript, "");
 });
