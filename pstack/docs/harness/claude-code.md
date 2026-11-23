@@ -13,7 +13,6 @@ pstack skills use Cursor names. In Claude Code, read this file once per session,
 | `Grep`, `Glob` | `Bash` with `rg` when the session has no `Grep` or `Glob`. |
 | `/loop` typed by the user | Claude Code's own `/loop`. It works as the skill describes. |
 | A step that tells you to run under `/loop`, arm a watcher, or wake on an event | You cannot start `/loop` yourself, so arm the wake directly. For one event, such as a PR verdict or a CI run ending, run a command that exits on that event with `Bash` `run_in_background: true`, such as the bare `watch-pr`. Its exit wakes you. For a line per event, use `Monitor` with `timeout_ms` at its maximum, and re-arm it each time it expires. For hc agents, wait as hc subagents below says. Only when nothing can signal the event: `ScheduleWakeup` if the user started this session with `/loop`, otherwise a one-shot `CronCreate`. Never end a turn while you wait on something with no wake armed, because nothing will prompt you again. |
-| A skill from the `cursor-team-kit` plugin, such as `deslop`, `control-ui`, or `control-cli` | The `cursor-team-kit` plugin from the same `cursor-plugins` marketplace. Run it with the `Skill` tool as `cursor-team-kit:<name>`, and write `/cursor-team-kit:<name>` when you tell the user to type it. If the `Skill` tool does not list it, do not skip the step: stop and tell the user to run `claude plugin install cursor-team-kit@cursor-plugins`. |
 
 ## Subagent fields
 

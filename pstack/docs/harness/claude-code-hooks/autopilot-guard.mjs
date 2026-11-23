@@ -18,9 +18,9 @@ const AUTOPILOT_PLAYBOOK = /playbooks\/autopilot-(full|stack)\.md/;
 const WORKER = "skills/poteto-mode/worker.md";
 const READERS = new Set(["Read", "Bash"]);
 // Opening a PR runs these over the diff and the PR text. pstack skills load by reading their SKILL.md (the Skill tool
-// refuses most of them); deslop comes from cursor-team-kit and loads either way.
+// refuses most of them).
 const PR_SKILLS = {
-  deslop: "the Skill tool with `cursor-team-kit:deslop`",
+  deslop: "Read `<pstack>/skills/deslop/SKILL.md`",
   "no-comments": "Read `<pstack>/skills/no-comments/SKILL.md`",
   "technical-writing": "Read `<pstack>/skills/technical-writing/SKILL.md`",
   unslop: "Read `<pstack>/skills/unslop/SKILL.md`",

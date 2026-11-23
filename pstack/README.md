@@ -129,6 +129,9 @@ to keep [`/poteto-mode`](./skills/poteto-mode/SKILL.md) on across turns, pick it
 | [`/poteto-help`](./skills/poteto-help/SKILL.md) | you're new to pstack, or unsure which skill, playbook, or principle fits. finds out what you're trying to do, answers that part, and hands you a prompt to type. runs only when you type `/poteto-help`. |
 | [`/in-your-own-words`](./skills/in-your-own-words/SKILL.md) | you want the agent to play back your goal and the problem before it starts. runs only when you type `/in-your-own-words`. |
 | [`/sharpen`](./skills/sharpen/SKILL.md) | you want a prompt made deeper, not bigger, before you send it: what a top professional would do that you didn't ask for, the raw material they'd start from, their methods and tools, and an outside check that the result is right. hands back the rewritten prompt, which asks the agent to prototype any choice an experiment can settle and leaves product and preference choices to you. doesn't do the task. runs only when you type `/sharpen`. |
+| [`/deslop`](./skills/deslop/SKILL.md) | you want AI-generated slop removed from the branch diff before you commit. |
+| [`/control-ui`](./skills/control-ui/SKILL.md) | you need to drive and inspect a web, IDE, or Electron UI locally: screenshots, accessibility snapshots, perf profiles, or reproducing a UI bug. |
+| [`/control-cli`](./skills/control-cli/SKILL.md) | you need to drive, inspect, or profile an interactive CLI or TUI through a repeatable local harness. |
 | [`/how`](./skills/how/SKILL.md) | you want a walkthrough of how a subsystem works. |
 | [`/why`](./skills/why/SKILL.md) | you want to know why something was built this way. answers from the record, not the code: the commits and pr discussions that introduced it and each later change, and other sources when that trail is thin. cites what the authors wrote, marks its own inferences, and says what the record does not answer. |
 | [`/recall`](./skills/recall/SKILL.md) | you're starting or resuming work and want your recent context on a topic rebuilt from your own chat history and the shared record, handed back as a tight current-state brief. |
@@ -270,11 +273,7 @@ twenty-four short skills, one principle each. `poteto-mode` indexes them inline 
 
 a few things `poteto-mode` references but doesn't bundle:
 
-- `/deslop` and the `deslop` skill ship in the `cursor-team-kit` plugin.
-- `control-cli` (for CLIs and TUIs) and `control-ui` (for browser, Electron, web) ship in `cursor-team-kit` too.
 - `/create-skill` is a cursor built-in. cursor also ships a built-in `/autopilot` that watches a pr. inside `poteto-mode`, pr-status requests go to the [babysit playbook](./skills/poteto-mode/playbooks/babysit.md) instead.
-
-install `cursor-team-kit` alongside pstack if you want the full set.
 
 ## why are there no planning skills?
 

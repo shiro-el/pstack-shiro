@@ -49,7 +49,6 @@ const TERMS = [
   { key: "~/.cursor/plugins/", re: /\.cursor\/plugins|\.cursor-plugin/ },
   { key: ".cursor/rules/", re: /\.cursor\/rules|always-applied rule/ },
   { key: "agent-transcripts", re: /agent-transcripts|\.cursor\/projects/ },
-  { key: "`cursor-team-kit`", re: /cursor-team-kit/ },
   { key: "`/loop`", re: /(^|[\s`(])\/loop\b(?!-)/m },
   { key: "The agent store", re: /agent's store|agent store|Project store|Project tracker/ },
   { key: "Cursor-only features", re: /Bugbot|Cursor [Aa]utomation|cursor\.(sh|com)\/automations|[Cc]loud [Aa]gent|built-in PR tool/ },
@@ -103,6 +102,12 @@ for (const [skill, { usesCursorNames, wrap }] of classes) {
   const name = frontmatter.match(/^name:(.*)$/m)?.[1].trim().replace(/^(["'])(.*)\1$/, "$2");
   if (name !== skill) problems.push(`skills/${skill}/SKILL.md has name ${JSON.stringify(name ?? "")}, not its folder name ${skill}`);
   if (!SKILL_NAME.test(skill) || skill.length > 64) problems.push(`skills/${skill} is not lowercase words joined by hyphens, at most 64 characters`);
+}
+// This fork ships deslop, control-ui, and control-cli in pstack/skills, so a cursor-team-kit mention (say, from an upstream merge) points at a plugin Claude Code does not install.
+for (const path of walk(PSTACK).filter((path) => /\.(md|mjs)$/.test(path))) {
+  if (readFileSync(path, "utf8").includes("cursor-team-kit")) {
+    problems.push(`pstack/${relative(PSTACK, path)} names cursor-team-kit; deslop, control-ui, and control-cli are pstack skills here, so name them as pstack skills`);
+  }
 }
 const adapter = readFileSync(join(PSTACK, ADAPTER), "utf8");
 for (const [key, using] of users) {

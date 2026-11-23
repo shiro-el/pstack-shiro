@@ -57,8 +57,7 @@ test("reading an Autopilot playbook outside poteto-mode leaves the session alone
 const kickoff = (text: string) => fire("UserPromptSubmit", { prompt: text });
 const opens = (command: string) => !fire("PreToolUse", { tool_name: "Bash", tool_input: { command } }).includes('"deny"');
 const loadPrSkills = () => {
-  tool("Skill", { skill: "cursor-team-kit:deslop" });
-  for (const name of ["no-comments", "technical-writing", "unslop"]) tool("Read", { file_path: `/plugin/skills/${name}/SKILL.md` });
+  for (const name of ["deslop", "no-comments", "technical-writing", "unslop"]) tool("Read", { file_path: `/plugin/skills/${name}/SKILL.md` });
 };
 
 test("a poteto-mode child cannot open a PR before it loads the Opening a PR skills", () => {
