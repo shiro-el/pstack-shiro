@@ -6,7 +6,7 @@ pstack skills use Cursor names. In Claude Code, read this file once per session,
 
 | Cursor | Claude Code |
 | --- | --- |
-| `Task` | `Agent` |
+| `Task` | In T3 Code, use `delegate_task` for cross-model work, panels, and long background tasks; use native `Agent` for quick same-provider helpers. Outside T3 Code, use `Agent`. |
 | `AskQuestion` | `AskUserQuestion`. In `-p` mode it is absent, so ask in plain text. |
 | Open a todolist | Use `TodoWrite` if the session offers it. Otherwise skip the list; do not keep it in your reply. |
 | Run another pstack skill (`/name` or "the **name** skill") | `Read` `<pstack>/skills/<name>/SKILL.md` and follow it. The `Skill` tool refuses most pstack skills. When you tell the user to type it, write `/pstack:<name>`. |
@@ -16,7 +16,9 @@ pstack skills use Cursor names. In Claude Code, read this file once per session,
 
 ## Subagent fields
 
-| Cursor | Claude Code |
+For Claude Code native `Agent`, map Cursor fields as below. For T3 Code `delegate_task`, omit Claude-only `Agent` fields (`subagent_type`, `isolation`): pass `readonly: true` as an explicit "do not edit files" instruction (and verify `git status` afterward), pass `environment: "cloud"` by creating a git worktree and pointing the child's `cwd` at it (or using T3's worktree option), and include the absolute path to `pstack/agents/poteto-agent.md` or `worker.md` in the brief when a role needs it.
+
+| Cursor | Claude Code (`Agent`) |
 | --- | --- |
 | `subagent_type: generalPurpose` | `subagent_type: "general-purpose"` |
 | `poteto-agent`, `comment-sicko` | `pstack:poteto-agent`, `pstack:comment-sicko` |
@@ -26,18 +28,18 @@ pstack skills use Cursor names. In Claude Code, read this file once per session,
 | `environment: "local"` | Omit. |
 | `cloud_base_branch: <b>` | Tell the worker to check out `<b>` first. |
 | `run_in_background: true` | Omit. Subagents run in the background by default and notify you when they finish. |
-| `resume` | Spawn a new agent and paste the earlier result into its brief. |
+| `resume` | In T3 Code `delegate_task`, you may continue an existing child thread. In native `Agent`, spawn a new agent and paste the earlier result into its brief. |
 | `file_attachments` | List the paths in the brief. |
 
 ## Models
 
 | Cursor | Claude Code / T3 Code |
 | --- | --- |
-| `claude-<family>-<version>-<effort>[-fast]`, such as `claude-opus-5-5-xhigh` | In Claude Code `Agent`: `model: "opus"` and `effort: "xhigh"` (`opus`, `sonnet`, `haiku`, `fable`; drop `-fast`). In T3 Code `delegate_task`: pick the matching provider (`claudeAgent`, `antigravity`, `codex`) and model/effort option from the session's available models. |
+| `claude-<family>-<version>-<effort>[-fast]`, such as `claude-opus-5-5-xhigh` | In Claude Code `Agent`: `model: "opus"` and `effort: "xhigh"` (`opus`, `sonnet`, `haiku`, `fable`; drop `-fast`). In T3 Code `delegate_task`: map `claude-*` to `claudeAgent`, `gemini-*` to `antigravity`, `gpt-*` to `codex`, and pass the parenthesized `(effort)` as that provider's effort/reasoning option. |
 | A `gemini-*` or `gpt-*` slug | In T3 Code, run it via `delegate_task` on `antigravity` or `codex` (for Codex, set `serviceTier: "default"`, or `"ultrafast"` for urgent work). Outside T3 Code, omit `model` so `Agent` runs on the session model, and say so. |
 | `auto` or `inherit-parent` | Omit `model`. |
-| The `pstack-models.mdc` rule, `~/.cursor/rules/pstack-models.mdc` | `~/.claude/rules/pstack-models.md` (shared with Codex and Antigravity). It lists the preferred model and effort per role, plus the cross-model panels. |
-| A panel line (`arena runners`, `architect runners`, `debate panel`, `interrogate reviewers`) | In T3 Code, spawn one `delegate_task` per seat across the listed providers (`claudeAgent`, `antigravity`, `codex`). |
+| The `pstack-models.mdc` rule, `~/.cursor/rules/pstack-models.mdc` | `~/.claude/rules/pstack-models.md` (shared with Codex and Antigravity). `\|` separates preferred/fallback choices for a single agent; `,` separates concurrent seats in a panel or judge pool. Role lines in `pstack-models.md` take precedence over `poteto-mode`'s "Match the model to the job" table (use `## Tier defaults` in `pstack-models.md` when stepping up/down). |
+| A panel line (`arena runners`, `architect runners`, `debate panel`, `interrogate reviewers`) | In T3 Code, spawn one `delegate_task` per comma-separated seat across the listed providers (`claudeAgent`, `antigravity`, `codex`). |
 | A cross-judge pool (`arena cross-judge pool`, `debate judge pool`) | Pick an entry from a vendor other than the parent thread and run it via `delegate_task`. |
 
 ## T3 Code subagents
@@ -46,13 +48,13 @@ In T3 Code, use `delegate_task` for cross-model work, multi-family panels (`inte
 
 - **No polling or wait scripts:** launch `delegate_task` children and end your turn. T3 wakes you automatically when a child finishes, and delivers its final reply to you.
 - **Name the provider, model, and effort** in your reply for every child you start.
-- **Debate rounds:** keep each debater in its own T3 child thread or pass prior round files in the next turn's brief.
+- **Debate rounds:** keep each debater in its own T3 child thread across rounds, or pass prior round files in the next turn's brief.
 - **Long briefs:** put a long brief in a file and pass its path. Keep the absolute path to [worker.md](../../skills/poteto-mode/worker.md) in the initial kickoff even when the task brief is a file.
 - **Large coordinator runs:** for more than three parallel agents or a ticket DAG, start one coordinator (`coordinator` role in `~/.claude/rules/pstack-models.md`) that manages workers and tracks progress in a state file (`STATE.md`).
 
 ## setup-pstack
 
-Follow its steps and write the role lines to `~/.claude/rules/pstack-models.md` (with no frontmatter). Detect available models from Claude Code, Codex, and Antigravity (`agy models`), and keep one line per role matching the format already in `~/.claude/rules/pstack-models.md`.
+Follow its steps and write the role lines to `~/.claude/rules/pstack-models.md` (with no frontmatter; Antigravity reads its frontmatter wrapper automatically). Preserve custom roles (`coordinator`, `ad-hoc`), `\|` fallback lists, and explicit `gemini-4-*` choices instead of replacing them with Cursor defaults.
 
 ## Paths
 
